@@ -1,20 +1,28 @@
 ﻿{
   "version": "1.0.0-*",
-  "description": "Client helper for OAuth 2.0 \"Client Credentials\" flow with JWT token client assertion support",
+  "description": "Client helper for OAuth 2.0 \"Client Credentials\" flow with JWT token assertion",
   "authors": [ "Scalepoint" ],
+  "owners": [ "scalepoint" ],
   "tags": [ "OAuth2 OpenID Connect OpenIDConnect ClientCredentials ClientAssertion JwtBearer PrivateKeyJwt" ],
   "projectUrl": "https://github.com/Scalepoint/OAuthJwtAssertionTokenClient",
   "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
-
+  "dependencies": {
+    "Newtonsoft.Json": "7.0.1",
+    "System.IdentityModel.Tokens.Jwt": "4.0.2.206221351"
+  },
   "frameworks": {
-    "dnx45": { },
-    "dnxcore50": {
-      "dependencies": {
-        "Microsoft.CSharp": "4.0.1-beta-23409",
-        "System.Collections": "4.0.11-beta-23409",
-        "System.Linq": "4.0.1-beta-23409",
-        "System.Runtime": "4.0.21-beta-23409",
-        "System.Threading": "4.0.11-beta-23409"
+    "net45": {
+      "frameworkAssemblies": {
+        "System.IdentityModel": "4.0.0.0",
+        "System.Runtime.Caching": "4.0.0.0",
+        "System.Net.Http": "4.0.0.0"
+      }
+    },
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.IdentityModel": "4.0.0.0",
+        "System.Runtime.Caching": "4.0.0.0",
+        "System.Net.Http": "4.0.0.0"
       }
     }
   }

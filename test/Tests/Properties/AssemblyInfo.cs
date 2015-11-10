@@ -1,15 +1,14 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OAuthJwtAssertionTokenClient")]
-[assembly: AssemblyDescription("Client helper for OAuth 2.0 \"Client Credentials\" flow with JWT token client assertion")]
+[assembly: AssemblyTitle("Tests")]
+[assembly: AssemblyDescription("Unit Tests for OAuthJwtAssertionTokenClient")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Scalepoint")]
-[assembly: AssemblyProduct("OAuthJwtAssertionTokenClient")]
+[assembly: AssemblyProduct("")]
 [assembly: AssemblyCopyright("Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,6 +19,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("5c0afb46-7122-449b-8df6-52aadbfaf483")]
-
-[assembly:InternalsVisibleTo("Tests")]
+[assembly: Guid("9fcfe941-e55b-4295-a3a8-b3c6582a21da")]

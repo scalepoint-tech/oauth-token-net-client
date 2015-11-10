@@ -13,6 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "OAuthJwtAssertionTokenClient", "src\OAuthJwtAssertionTokenClient\OAuthJwtAssertionTokenClient.xproj", "{5C0AFB46-7122-449B-8DF6-52AADBFAF483}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{17C9F8EB-5E7A-431D-9682-58D7B833DE87}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Tests", "test\Tests\Tests.xproj", "{9FCFE941-E55B-4295-A3A8-B3C6582A21DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,11 +27,16 @@ Global
 		{5C0AFB46-7122-449B-8DF6-52AADBFAF483}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C0AFB46-7122-449B-8DF6-52AADBFAF483}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C0AFB46-7122-449B-8DF6-52AADBFAF483}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FCFE941-E55B-4295-A3A8-B3C6582A21DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FCFE941-E55B-4295-A3A8-B3C6582A21DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FCFE941-E55B-4295-A3A8-B3C6582A21DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FCFE941-E55B-4295-A3A8-B3C6582A21DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5C0AFB46-7122-449B-8DF6-52AADBFAF483} = {E8F8AEC9-DCEB-4CB9-BEE3-E08C08A8FB98}
+		{9FCFE941-E55B-4295-A3A8-B3C6582A21DA} = {17C9F8EB-5E7A-431D-9682-58D7B833DE87}
 	EndGlobalSection
 EndGlobal
