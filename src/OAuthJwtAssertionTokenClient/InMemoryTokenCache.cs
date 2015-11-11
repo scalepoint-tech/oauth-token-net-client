@@ -6,13 +6,23 @@ using System.Threading.Tasks;
 
 namespace OAuthJwtAssertionTokenClient
 {
+    /// <summary>
+    /// In-memory token cache implementation
+    /// </summary>
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     [SuppressMessage("ReSharper", "ClassWithVirtualMembersNeverInherited.Global")]
-    public class InMemoryReadThroughCache : IReadThroughCache, IDisposable
+    public class InMemoryTokenCache : ITokenCache, IDisposable
     {
-        private readonly MemoryCache _cache = new MemoryCache("InMemoryReadThroughCache");
+        private readonly MemoryCache _cache = new MemoryCache("InMemoryTokenCache");
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
+        /// <summary>
+        /// Returns token from cache or fetches it from the underlying source if it is not cached
+        /// </summary>
+        /// <typeparam name="T">Token type</typeparam>
+        /// <param name="cacheKey">Cache key</param>
+        /// <param name="underlyingSource">Underlying source</param>
+        /// <returns>Token</returns>
         public Task<T> GetAsync<T>(string cacheKey, Func<Task<Tuple<T, TimeSpan>>> underlyingSource)
         {
             var cacheEntry = (T)_cache.Get(cacheKey);
@@ -52,7 +62,7 @@ namespace OAuthJwtAssertionTokenClient
             GC.SuppressFinalize(this);
         }
 
-        ~InMemoryReadThroughCache()
+        ~InMemoryTokenCache()
         {
             Dispose(false);
         }

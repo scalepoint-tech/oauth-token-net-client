@@ -3,6 +3,9 @@ using System.Runtime.Serialization;
 
 namespace OAuthJwtAssertionTokenClient
 {
+    /// <summary>
+    /// Represents OAuth2 token endpoint error
+    /// </summary>
     public class TokenEndpointException : Exception
     {
         public TokenEndpointException()
