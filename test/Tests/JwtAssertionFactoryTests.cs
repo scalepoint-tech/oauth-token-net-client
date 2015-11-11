@@ -16,7 +16,7 @@ namespace Tests
         {
             _tokenEndpointUrl = "https://authorizationserver.test";
             _clientId = "test_client";
-            _certificate = new X509Certificate2("client-test.pfx", "password");
+            _certificate = TestCertificate.Load();
             _factory = new JwtAssertionFactory(_tokenEndpointUrl, _clientId, _certificate);
         }
 
