@@ -1,18 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace OAuthJwtAssertionTokenClient
 {
     /// <summary>
-    /// Token client that authenticates using "private_key_jwt" authentication method
+    /// Token client that authenticates against the Authorization Server using "private_key_jwt" authentication method and retrieves access token
     /// </summary>
     public class JwtAssertionTokenClient
     {
         private readonly ITokenCache _cache;
         private static readonly Lazy<ITokenCache> DefaultTokenCache = new Lazy<ITokenCache>(() => new InMemoryTokenCache());
         private readonly PrivateKeyJwtClientCredentialsTokenClient _internalClient;
-        private readonly string _cacheKey;
+        private readonly string _partialCacheKey;
 
         /// <summary>
         /// Constructs a JwtAssertionTokenClient with default (in-memory) cache
@@ -21,8 +23,8 @@ namespace OAuthJwtAssertionTokenClient
         /// <param name="clientId">OAuth2 client_id</param>
         /// <param name="certificate">Certificate used for signing JWT client assertion (must have private key)</param>
         /// <param name="scopes">OAuth2 scopes</param>
-        public JwtAssertionTokenClient(string authorizationServerUrl, string clientId, X509Certificate2 certificate, string[] scopes)
-            : this(authorizationServerUrl, clientId, certificate, scopes, DefaultTokenCache.Value)
+        public JwtAssertionTokenClient(string authorizationServerUrl, string clientId, X509Certificate2 certificate)
+            : this(authorizationServerUrl, clientId, certificate, DefaultTokenCache.Value)
         {
         }
 
@@ -34,16 +36,15 @@ namespace OAuthJwtAssertionTokenClient
         /// <param name="certificate">Certificate used for signing JWT client assertion (must have private key)</param>
         /// <param name="scopes">OAuth2 scopes</param>
         /// <param name="cache">Token cache</param>
-        public JwtAssertionTokenClient(string authorizationServerUrl, string clientId, X509Certificate2 certificate, string[] scopes, ITokenCache cache)
+        public JwtAssertionTokenClient(string authorizationServerUrl, string clientId, X509Certificate2 certificate, ITokenCache cache)
         {
             ValidateCertificate(certificate);
             _cache = cache;
             _internalClient = new PrivateKeyJwtClientCredentialsTokenClient(
                 authorizationServerUrl,
                 clientId,
-                certificate,
-                scopes);
-            _cacheKey = string.Join("|", authorizationServerUrl, clientId, certificate.Thumbprint, string.Join("", scopes));
+                certificate);
+            _partialCacheKey = string.Join("|", authorizationServerUrl, clientId, certificate.Thumbprint);
         }
 
         private static void ValidateCertificate(X509Certificate2 certificate)
@@ -72,10 +73,30 @@ namespace OAuthJwtAssertionTokenClient
             }
         }
 
-        public async Task<string> GetToken()
+        /// <summary>
+        /// Get access token
+        /// </summary>
+        /// <param name="scopes">Requested OAuth2 scopes</param>
+        /// <returns>OAuth2 access token</returns>
+        public async Task<string> GetAccessTokenAsync(params string[] scopes)
         {
-            return await _cache.GetAsync(_cacheKey, _internalClient.GetToken);
+            if (scopes == null || !scopes.Any())
+            {
+                throw new ArgumentException("At least one scope must be present", nameof(scopes));
+            }
+            var scopeString = string.Join("", scopes);
+            var cacheKey = string.Join(":", _partialCacheKey, scopeString);
+            return await _cache.GetAsync(cacheKey, () => _internalClient.GetToken(scopes));
         }
 
+        /// <summary>
+        /// Get access token
+        /// </summary>
+        /// <param name="scopes">Requested OAuth2 scopes</param>
+        /// <returns>OAuth2 access token</returns>
+        public Task<string> GetAccessTokenAsync(IEnumerable<string> scopes)
+        {
+            return GetAccessTokenAsync(scopes?.ToArray());
+        }
     }
 }

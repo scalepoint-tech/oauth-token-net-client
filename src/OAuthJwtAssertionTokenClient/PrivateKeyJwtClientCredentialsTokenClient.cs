@@ -13,24 +13,22 @@ namespace OAuthJwtAssertionTokenClient
     {
         private readonly string _tokenEndpointUrl;
         private readonly string _clientId;
-        private readonly string[] _scopes;
         private readonly JwtAssertionFactory _jwtAssertionFactory;
 
-        public PrivateKeyJwtClientCredentialsTokenClient(string tokenEndpointUrl, string clientId, X509Certificate2 certificate, string[] scopes)
+        public PrivateKeyJwtClientCredentialsTokenClient(string tokenEndpointUrl, string clientId, X509Certificate2 certificate)
         {
             _jwtAssertionFactory = new JwtAssertionFactory(tokenEndpointUrl, clientId, certificate);
             _tokenEndpointUrl = tokenEndpointUrl;
             _clientId = clientId;
-            _scopes = scopes;
         }
 
-        public async Task<Tuple<string, TimeSpan>> GetToken()
+        public async Task<Tuple<string, TimeSpan>> GetToken(IEnumerable<string> scopes)
         {
             var tokenString = _jwtAssertionFactory.CreateAssertionToken();
 
             using (var client = new HttpClient())
             {
-                var scopeString = string.Join(" ", _scopes);
+                var scopeString = string.Join(" ", scopes);
                 var requestBody = new FormUrlEncodedContent(new Dictionary<string, string>
                 {
                     { "client_id", _clientId },
@@ -52,6 +50,5 @@ namespace OAuthJwtAssertionTokenClient
                 return new ExpiringToken(accessToken, expiresIn);
             }
         }
-
     }
 }

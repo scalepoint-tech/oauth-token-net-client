@@ -22,9 +22,8 @@ Obtaining access token from Authorization Server token endpoint is as simple as 
 var tokenClient = new JwtAssertionTokenClient(
                         authorizationServerUrl,
                         clientId,
-                        x509certificate,
-                        new[] { scope1, scope2 }
+                        x509certificate
                   );
 
-var accessToken = await tokenClient.GetToken();
+var accessToken = await tokenClient.GetToken(scope1, scope2);
 ```

@@ -9,13 +9,13 @@ namespace Tests
 
         public RealAuthorizationServerTest()
         {
-            _tokenClient = new JwtAssertionTokenClient("https://localhost:44300/connect/token", "test_client", TestCertificate.Load(), new[] { "test_scope" });
+            _tokenClient = new JwtAssertionTokenClient("https://localhost:44300/connect/token", "test_client", TestCertificate.Load());
         }
 
         [Fact]
         public async void should_get_access_token()
         {
-            var token = await _tokenClient.GetToken();
+            var token = await _tokenClient.GetAccessTokenAsync("test_scope");
             Assert.NotNull(token);
         }
     }
