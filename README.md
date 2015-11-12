@@ -25,5 +25,5 @@ var tokenClient = new JwtAssertionTokenClient(
                         x509certificate
                   );
 
-var accessToken = await tokenClient.GetToken(scope1, scope2);
+var accessToken = await tokenClient.GetAccessTokenAsync(scope1, scope2);
 ```
