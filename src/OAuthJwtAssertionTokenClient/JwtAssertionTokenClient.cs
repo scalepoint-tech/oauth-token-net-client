@@ -19,32 +19,30 @@ namespace OAuthJwtAssertionTokenClient
         /// <summary>
         /// Constructs a JwtAssertionTokenClient with default (in-memory) cache
         /// </summary>
-        /// <param name="authorizationServerUrl">Authorization Server token endpoint</param>
+        /// <param name="tokenEndpointUrl">Authorization Server token endpoint</param>
         /// <param name="clientId">OAuth2 client_id</param>
         /// <param name="certificate">Certificate used for signing JWT client assertion (must have private key)</param>
-        /// <param name="scopes">OAuth2 scopes</param>
-        public JwtAssertionTokenClient(string authorizationServerUrl, string clientId, X509Certificate2 certificate)
-            : this(authorizationServerUrl, clientId, certificate, DefaultTokenCache.Value)
+        public JwtAssertionTokenClient(string tokenEndpointUrl, string clientId, X509Certificate2 certificate)
+            : this(tokenEndpointUrl, clientId, certificate, DefaultTokenCache.Value)
         {
         }
 
         /// <summary>
         /// Constructs a JwtAssertionTokenClient with default (in-memory) cache
         /// </summary>
-        /// <param name="authorizationServerUrl">Authorization Server token endpoint</param>
+        /// <param name="tokenEndpointUrl">Authorization Server token endpoint</param>
         /// <param name="clientId">OAuth2 client_id</param>
         /// <param name="certificate">Certificate used for signing JWT client assertion (must have private key)</param>
-        /// <param name="scopes">OAuth2 scopes</param>
         /// <param name="cache">Token cache</param>
-        public JwtAssertionTokenClient(string authorizationServerUrl, string clientId, X509Certificate2 certificate, ITokenCache cache)
+        public JwtAssertionTokenClient(string tokenEndpointUrl, string clientId, X509Certificate2 certificate, ITokenCache cache)
         {
             ValidateCertificate(certificate);
             _cache = cache;
             _internalClient = new PrivateKeyJwtClientCredentialsTokenClient(
-                authorizationServerUrl,
+                tokenEndpointUrl,
                 clientId,
                 certificate);
-            _partialCacheKey = string.Join("|", authorizationServerUrl, clientId, certificate.Thumbprint);
+            _partialCacheKey = string.Join("|", tokenEndpointUrl, clientId, certificate.Thumbprint);
         }
 
         private static void ValidateCertificate(X509Certificate2 certificate)
