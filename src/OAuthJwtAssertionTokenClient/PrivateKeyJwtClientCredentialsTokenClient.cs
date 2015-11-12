@@ -46,6 +46,16 @@ namespace OAuthJwtAssertionTokenClient
 
                 var body = JsonConvert.DeserializeObject<dynamic>(content);
                 var accessToken = (string)body.access_token;
+
+                if (string.IsNullOrWhiteSpace(accessToken))
+                {
+                    throw new TokenEndpointException("Token endpoint response does not contain valid \"access_token\"");
+                }
+                if (body.expires_in == null)
+                {
+                    throw new TokenEndpointException("Token endpoint response does not contain valid \"expires_in\"");
+                }
+
                 var expiresIn = TimeSpan.FromMinutes(Convert.ToInt32(body.expires_in));
                 return new ExpiringToken(accessToken, expiresIn);
             }
