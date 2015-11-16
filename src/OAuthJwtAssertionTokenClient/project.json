@@ -1,5 +1,6 @@
 ﻿{
   "version": "2.0.1-*",
+  "title": "OAuth JWT Assertion Token Client",
   "description": "Client helper for OAuth 2.0 \"Client Credentials\" flow with JWT token assertion",
   "authors": [ "Scalepoint" ],
   "owners": [ "scalepoint" ],
@@ -12,6 +13,9 @@
   },
   "frameworks": {
     "net45": {
+      "compilationOptions": {
+        "keyFile": "..\\..\\SigningKey.snk"
+      },
       "frameworkAssemblies": {
         "System.IdentityModel": "4.0.0.0",
         "System.Runtime.Caching": "4.0.0.0",
