@@ -1,0 +1,5 @@
+mode: ContinuousDeployment
+continuous-delivery-fallback-tag: unstable
+branches:
+  master:
+    prevent-increment-of-merged-branch-version: true
