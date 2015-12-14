@@ -56,7 +56,7 @@ namespace OAuthJwtAssertionTokenClient
                     throw new TokenEndpointException("Token endpoint response does not contain valid \"expires_in\"");
                 }
 
-                var expiresIn = TimeSpan.FromMinutes(Convert.ToInt32(body.expires_in));
+                var expiresIn = TimeSpan.FromSeconds(Convert.ToInt32(body.expires_in));
                 return new ExpiringToken(accessToken, expiresIn);
             }
         }
