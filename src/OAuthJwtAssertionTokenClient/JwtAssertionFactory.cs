@@ -23,7 +23,7 @@ namespace OAuthJwtAssertionTokenClient
 
         public string CreateAssertionToken()
         {
-            var now = DateTimeOffset.Now;
+            var now = DateTime.Now.ToUniversalTime();
 
             var jwt = new JwtSecurityToken(_clientId,
                                            _audience,
@@ -31,10 +31,10 @@ namespace OAuthJwtAssertionTokenClient
                                            {
                                                new Claim(JwtClaimTypes.JwtId, Guid.NewGuid().ToString()),
                                                new Claim(JwtClaimTypes.Subject, _clientId),
-                                               new Claim(JwtClaimTypes.IssuedAt, UnixTime(now).ToString(), ClaimValueTypes.Integer64)
+                                               new Claim(JwtClaimTypes.IssuedAt, EpochTime.GetIntDate(now).ToString(), ClaimValueTypes.Integer64)
                                            },
-                                           now.DateTime,
-                                           now.DateTime.AddMinutes(1),
+                                           now,
+                                           now.AddMinutes(1),
                                            new X509SigningCredentials(_certificate,
                                                SecurityAlgorithms.RsaSha256Signature,
                                                SecurityAlgorithms.Sha256Digest
@@ -49,11 +49,6 @@ namespace OAuthJwtAssertionTokenClient
 
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(jwt);
-        }
-
-        private int UnixTime(DateTimeOffset dateTime)
-        {
-            return (int)(dateTime - new DateTime(1970, 1, 1)).TotalSeconds;
         }
     }
 }
