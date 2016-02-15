@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ExpiringToken = System.Tuple<string, System.TimeSpan>;
@@ -15,11 +14,11 @@ namespace OAuthJwtAssertionTokenClient
         private readonly string _clientId;
         private readonly JwtAssertionFactory _jwtAssertionFactory;
 
-        public PrivateKeyJwtClientCredentialsTokenClient(string tokenEndpointUrl, string clientId, X509Certificate2 certificate)
+        public PrivateKeyJwtClientCredentialsTokenClient(TokenClientOptions options)
         {
-            _jwtAssertionFactory = new JwtAssertionFactory(tokenEndpointUrl, clientId, certificate);
-            _tokenEndpointUrl = tokenEndpointUrl;
-            _clientId = clientId;
+            _jwtAssertionFactory = new JwtAssertionFactory(options);
+            _tokenEndpointUrl = options.TokenEndpointUrl;
+            _clientId = options.ClientId;
         }
 
         public async Task<Tuple<string, TimeSpan>> GetToken(IEnumerable<string> scopes)

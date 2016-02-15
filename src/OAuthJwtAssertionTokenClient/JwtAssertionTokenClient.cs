@@ -17,6 +17,18 @@ namespace OAuthJwtAssertionTokenClient
         private readonly string _partialCacheKey;
 
         /// <summary>
+        /// Constructs a JwtAssertionTokenClient with specified options
+        /// </summary>
+        /// <param name="options">Token client options</param>
+        public JwtAssertionTokenClient(TokenClientOptions options)
+        {
+            ValidateOptions(options);
+            _cache = options.Cache ?? DefaultTokenCache.Value;
+            _internalClient = new PrivateKeyJwtClientCredentialsTokenClient(options);
+            _partialCacheKey = string.Join("|", options.TokenEndpointUrl, options.ClientId, options.Certificate.Thumbprint);
+        }
+
+        /// <summary>
         /// Constructs a JwtAssertionTokenClient with default (in-memory) cache
         /// </summary>
         /// <param name="tokenEndpointUrl">Authorization Server token endpoint</param>
@@ -35,14 +47,39 @@ namespace OAuthJwtAssertionTokenClient
         /// <param name="certificate">Certificate used for signing JWT client assertion (must have private key)</param>
         /// <param name="cache">Token cache</param>
         public JwtAssertionTokenClient(string tokenEndpointUrl, string clientId, X509Certificate2 certificate, ITokenCache cache)
+            : this(new TokenClientOptions()
+            {
+                TokenEndpointUrl = tokenEndpointUrl,
+                ClientId = clientId,
+                Certificate = certificate,
+                Cache = cache
+            })
         {
-            ValidateCertificate(certificate);
-            _cache = cache;
-            _internalClient = new PrivateKeyJwtClientCredentialsTokenClient(
-                tokenEndpointUrl,
-                clientId,
-                certificate);
-            _partialCacheKey = string.Join("|", tokenEndpointUrl, clientId, certificate.Thumbprint);
+        }
+
+        private void ValidateOptions(TokenClientOptions options)
+        {
+            if (options == null)
+            {
+                throw new ArgumentException("Options cannot be null", nameof(options));
+            }
+
+            if (string.IsNullOrWhiteSpace(options.TokenEndpointUrl))
+            {
+                throw new ArgumentException("TokenEndpointUrl must be set", nameof(options.TokenEndpointUrl));
+            }
+
+            if (string.IsNullOrWhiteSpace(options.ClientId))
+            {
+                throw new ArgumentException("ClientId must be set", nameof(options.ClientId));
+            }
+
+            if (options.Certificate == null)
+            {
+                throw new ArgumentException("Certificate must be set", nameof(options.Certificate));
+            }
+
+            ValidateCertificate(options.Certificate);
         }
 
         private static void ValidateCertificate(X509Certificate2 certificate)

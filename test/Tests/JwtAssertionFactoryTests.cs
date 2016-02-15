@@ -17,7 +17,12 @@ namespace Tests
             _tokenEndpointUrl = "https://authorizationserver.test/oauth2/token";
             _clientId = "test_client";
             _certificate = TestCertificate.Load();
-            _factory = new JwtAssertionFactory(_tokenEndpointUrl, _clientId, _certificate);
+            _factory = new JwtAssertionFactory(new TokenClientOptions()
+            {
+                TokenEndpointUrl = _tokenEndpointUrl,
+                ClientId = _clientId,
+                Certificate = _certificate
+            });
         }
 
         [Fact]

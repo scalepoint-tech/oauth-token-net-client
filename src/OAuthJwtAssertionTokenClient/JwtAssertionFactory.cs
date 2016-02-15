@@ -8,15 +8,15 @@ namespace OAuthJwtAssertionTokenClient
 {
     internal class JwtAssertionFactory
     {
-        private readonly string _tokenEndpointUrl;
+        private readonly string _audience;
         private readonly string _clientId;
         private readonly X509Certificate2 _certificate;
 
-        public JwtAssertionFactory(string tokenEndpointUrl, string clientId, X509Certificate2 certificate)
+        public JwtAssertionFactory(TokenClientOptions options)
         {
-            _tokenEndpointUrl = tokenEndpointUrl;
-            _clientId = clientId;
-            _certificate = certificate;
+            _audience = options.Audience ?? options.TokenEndpointUrl;
+            _clientId = options.ClientId;
+            _certificate = options.Certificate;
         }
 
         public string CreateAssertionToken()
@@ -24,7 +24,7 @@ namespace OAuthJwtAssertionTokenClient
             var now = DateTimeOffset.Now;
 
             var jwt = new JwtSecurityToken(_clientId,
-                                           _tokenEndpointUrl,
+                                           _audience,
                                            new List<Claim>()
                                            {
                                                new Claim(JwtClaimTypes.JwtId, Guid.NewGuid().ToString()),

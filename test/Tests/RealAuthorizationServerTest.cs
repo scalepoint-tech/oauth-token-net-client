@@ -9,7 +9,14 @@ namespace Tests
 
         public RealAuthorizationServerTest()
         {
-            _tokenClient = new JwtAssertionTokenClient("https://localhost:44300/connect/token", "test_client", TestCertificate.Load());
+            var options = new TokenClientOptions()
+            {
+                TokenEndpointUrl = "https://localhost:44300/connect/token",
+                ClientId = "test_client",
+                Certificate = TestCertificate.Load()
+            };
+
+            _tokenClient = new JwtAssertionTokenClient(options);
         }
 
         [Fact(Skip = "Disable until server side implementation is released in upstream so that it can be used with NuGet")]
