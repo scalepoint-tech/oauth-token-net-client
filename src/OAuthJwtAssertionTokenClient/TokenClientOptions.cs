@@ -31,5 +31,10 @@ namespace OAuthJwtAssertionTokenClient
         /// JWT "aud" value. If not set, defaults to <see cref="TokenEndpointUrl"/>
         /// </summary>
         public string Audience { get; set; }
+
+        /// <summary>
+        /// When set to true, a full certificate will be added to the token header in "x5c"
+        /// </summary>
+        public bool EmbedCertificate { get; set; } = false;
     }
 }

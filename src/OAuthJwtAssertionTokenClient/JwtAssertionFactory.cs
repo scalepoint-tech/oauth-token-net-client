@@ -11,12 +11,14 @@ namespace OAuthJwtAssertionTokenClient
         private readonly string _audience;
         private readonly string _clientId;
         private readonly X509Certificate2 _certificate;
+        private readonly bool _embedCertificate;
 
         public JwtAssertionFactory(TokenClientOptions options)
         {
             _audience = options.Audience ?? options.TokenEndpointUrl;
             _clientId = options.ClientId;
             _certificate = options.Certificate;
+            _embedCertificate = options.EmbedCertificate;
         }
 
         public string CreateAssertionToken()
@@ -38,8 +40,13 @@ namespace OAuthJwtAssertionTokenClient
                                                SecurityAlgorithms.Sha256Digest
                                             )
                         );
-            var rawCertificate = Convert.ToBase64String(_certificate.Export(X509ContentType.Cert));
-            jwt.Header.Add(JwtHeaderParameterNames.X5c, new[] { rawCertificate });
+
+            if (_embedCertificate)
+            {
+                var rawCertificate = Convert.ToBase64String(_certificate.Export(X509ContentType.Cert));
+                jwt.Header.Add(JwtHeaderParameterNames.X5c, new[] {rawCertificate});
+            }
+
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(jwt);
         }
