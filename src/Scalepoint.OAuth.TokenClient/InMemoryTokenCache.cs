@@ -4,7 +4,7 @@ using System.Runtime.Caching;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OAuthJwtAssertionTokenClient
+namespace Scalepoint.OAuth.TokenClient
 {
     /// <summary>
     /// In-memory token cache implementation

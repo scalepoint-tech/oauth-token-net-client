@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace OAuthJwtAssertionTokenClient
+namespace Scalepoint.OAuth.TokenClient
 {
     /// <summary>
     /// Represents OAuth2 token endpoint error

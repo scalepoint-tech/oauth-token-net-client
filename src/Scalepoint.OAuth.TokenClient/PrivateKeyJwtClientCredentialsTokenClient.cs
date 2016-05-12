@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ExpiringToken = System.Tuple<string, System.TimeSpan>;
 
-namespace OAuthJwtAssertionTokenClient
+namespace Scalepoint.OAuth.TokenClient
 {
     internal class PrivateKeyJwtClientCredentialsTokenClient
     {

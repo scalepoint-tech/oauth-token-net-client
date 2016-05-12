@@ -1,4 +1,4 @@
-﻿using OAuthJwtAssertionTokenClient;
+﻿using Scalepoint.OAuth.TokenClient;
 using Xunit;
 
 namespace Tests

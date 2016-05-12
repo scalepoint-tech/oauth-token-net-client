@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace OAuthJwtAssertionTokenClient
+namespace Scalepoint.OAuth.TokenClient
 {
     /// <summary>
     /// Token cache

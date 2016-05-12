@@ -1,6 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
 
-namespace OAuthJwtAssertionTokenClient
+namespace Scalepoint.OAuth.TokenClient
 {
     /// <summary>
     /// Token client options

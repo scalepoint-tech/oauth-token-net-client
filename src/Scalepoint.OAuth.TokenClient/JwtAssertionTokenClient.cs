@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
-namespace OAuthJwtAssertionTokenClient
+namespace Scalepoint.OAuth.TokenClient
 {
     /// <summary>
     /// Token client that authenticates against the Authorization Server using "private_key_jwt" authentication method and retrieves access token

@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens;
 using System.Security.Cryptography.X509Certificates;
-using OAuthJwtAssertionTokenClient;
+using Scalepoint.OAuth.TokenClient;
 using Xunit;
 
 namespace Tests

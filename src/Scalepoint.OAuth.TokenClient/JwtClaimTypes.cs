@@ -1,4 +1,4 @@
-﻿namespace OAuthJwtAssertionTokenClient
+﻿namespace Scalepoint.OAuth.TokenClient
 {
     internal static class JwtClaimTypes
     {
