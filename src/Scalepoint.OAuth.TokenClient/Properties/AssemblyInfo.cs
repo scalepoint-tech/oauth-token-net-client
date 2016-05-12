@@ -1,15 +1,14 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Tests")]
-[assembly: AssemblyDescription("Unit Tests for Scalepoint.OAuth.TokenClient")]
+[assembly: AssemblyTitle("Scalepoint.OAuth.TokenClient")]
+[assembly: AssemblyDescription("Client helper for OAuth 2.0 Token endpoint")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Scalepoint")]
-[assembly: AssemblyProduct("Tests")]
+[assembly: AssemblyProduct("Scalepoint.OAuth.TokenClient")]
 [assembly: AssemblyCopyright("Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +19,9 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("9fcfe941-e55b-4295-a3a8-b3c6582a21da")]
+[assembly: Guid("5c0afb46-7122-449b-8df6-52aadbfaf483")]
+
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Tests")]
 
 // Version information for an assembly consists of the following four values:
 //

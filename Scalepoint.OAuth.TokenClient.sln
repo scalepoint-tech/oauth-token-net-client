@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E8F8AEC9-DCEB-4CB9-BEE3-E08C08A8FB98}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9F1934F3-5D97-4556-A7F5-4079216FE52A}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+		NuGet.Config = NuGet.Config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{17C9F8EB-5E7A-431D-9682-58D7B833DE87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scalepoint.OAuth.TokenClient", "src\Scalepoint.OAuth.TokenClient\Scalepoint.OAuth.TokenClient.csproj", "{15FE1FF7-3010-482D-8FA4-FB22EE5C3BA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "test\Tests\Tests.csproj", "{33AE3DC9-BC03-4B20-A437-5C99C5816615}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{15FE1FF7-3010-482D-8FA4-FB22EE5C3BA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15FE1FF7-3010-482D-8FA4-FB22EE5C3BA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15FE1FF7-3010-482D-8FA4-FB22EE5C3BA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15FE1FF7-3010-482D-8FA4-FB22EE5C3BA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33AE3DC9-BC03-4B20-A437-5C99C5816615}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33AE3DC9-BC03-4B20-A437-5C99C5816615}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33AE3DC9-BC03-4B20-A437-5C99C5816615}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33AE3DC9-BC03-4B20-A437-5C99C5816615}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{15FE1FF7-3010-482D-8FA4-FB22EE5C3BA6} = {E8F8AEC9-DCEB-4CB9-BEE3-E08C08A8FB98}
+		{33AE3DC9-BC03-4B20-A437-5C99C5816615} = {17C9F8EB-5E7A-431D-9682-58D7B833DE87}
+	EndGlobalSection
+EndGlobal
