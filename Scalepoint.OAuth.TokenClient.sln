@@ -7,8 +7,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E8F8AEC9-DCE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9F1934F3-5D97-4556-A7F5-4079216FE52A}"
 	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		GitVersionConfig.yaml = GitVersionConfig.yaml
+		LICENSE.txt = LICENSE.txt
 		NuGet.Config = NuGet.Config
+		README.md = README.md
+		SigningKey.snk = SigningKey.snk
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{17C9F8EB-5E7A-431D-9682-58D7B833DE87}"
