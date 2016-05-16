@@ -1,12 +1,15 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Tests
 {
-    public class TestCertificate
+    public static class TestCertificate
     {
+        private static readonly Lazy<X509Certificate2> TestCert = new Lazy<X509Certificate2>(() => new X509Certificate2("client-test.pfx", "password"));
+
         public static X509Certificate2 Load()
         {
-            return new X509Certificate2("client-test.pfx", "password");
+            return TestCert.Value;
         }
     }
 }
