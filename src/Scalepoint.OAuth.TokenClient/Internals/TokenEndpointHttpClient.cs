@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Scalepoint.OAuth.TokenClient.Internals
 {
@@ -46,8 +46,9 @@ namespace Scalepoint.OAuth.TokenClient.Internals
 
         private static Tuple<string, TimeSpan> ParseResponse(string content)
         {
-            var body = JsonConvert.DeserializeObject<dynamic>(content);
-            var accessToken = (string)body.access_token;
+            var body = JObject.Parse(content);
+            var accessToken = body.Property("access_token").Value.Value<string>();
+            var expiresInJson = body.Property("expires_in");
 
             if (string.IsNullOrWhiteSpace(accessToken))
             {
@@ -55,9 +56,9 @@ namespace Scalepoint.OAuth.TokenClient.Internals
             }
 
             var expiresInSeconds = 0;
-            if (body.expires_in != null)
+            if (expiresInJson != null)
             {
-                expiresInSeconds = body.expires_in;
+                expiresInSeconds = expiresInJson.Value.Value<int>();
             }
 
             var expiresIn = TimeSpan.FromSeconds(Convert.ToInt32(expiresInSeconds));
