@@ -1,15 +1,19 @@
-﻿using Scalepoint.OAuth.TokenClient;
+﻿using System;
+using Scalepoint.OAuth.TokenClient;
 using Xunit;
 
 namespace Tests
 {
-    public class RealAuthorizationServerTest
+    public class MockAuthorizationServerTest : IDisposable
     {
+        private IDisposable _mockServer;
         private readonly ClientCredentialsGrantTokenClient _tokenClient;
 
-        public RealAuthorizationServerTest()
+        public MockAuthorizationServerTest()
         {
-            var tokenEndpointUri = "https://localhost:44300/connect/token";
+            int port;
+            _mockServer = MockServer.Start(out port);
+            var tokenEndpointUri = $"http://localhost:{port}/oauth/token";
 
             _tokenClient = new ClientCredentialsGrantTokenClient(
                 tokenEndpointUri,
@@ -18,14 +22,19 @@ namespace Tests
                     "test_client",
                     TestCertificate.Load()
                 ));
-
         }
 
-        [Fact(Skip = "Disable until server side implementation is released in upstream so that it can be used with NuGet")]
+        [Fact]
         public async void should_get_access_token()
         {
             var token = await _tokenClient.GetTokenAsync("test_scope");
             Assert.NotNull(token);
+        }
+
+        public void Dispose()
+        {
+            _mockServer.Dispose();
+            _mockServer = null;
         }
     }
 }
