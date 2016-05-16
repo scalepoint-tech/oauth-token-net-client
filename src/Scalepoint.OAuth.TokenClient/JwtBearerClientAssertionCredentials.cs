@@ -4,10 +4,21 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Scalepoint.OAuth.TokenClient
 {
+    /// <summary>
+    /// OAuth2 "client_assertion" client credentials with "urn:ietf:params:oauth:client-assertion-type:jwt-bearer" assertion type
+    /// <see href="https://tools.ietf.org/html/rfc7521#section-6.2">Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants</see>
+    /// <see href="https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication">OpenID Connect Core 1.0</see>
+    /// </summary>
     public class JwtBearerClientAssertionCredentials : IClientCredentials
     {
         private readonly ClientAssertionJwtFactory _assertionFactory;
 
+        /// <summary>
+        /// Creates new JwtBearerClientAssertionCredentials
+        /// </summary>
+        /// <param name="tokenEndpointUri">OAuth2 token endpoint URI. Used as "aud" claim value</param>
+        /// <param name="clientId">OAuth2 "client_id"</param>
+        /// <param name="certificate">Certificate with private key. Certificate must be signed with SHA256. RSA keys must be 2048 bits long. Certificate must be associated with the client_id on the server</param>
         public JwtBearerClientAssertionCredentials(string tokenEndpointUri, string clientId, X509Certificate2 certificate)
         {
             ValidateCertificate(certificate);
