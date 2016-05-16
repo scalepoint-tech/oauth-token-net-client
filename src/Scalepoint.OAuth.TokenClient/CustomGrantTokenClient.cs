@@ -19,7 +19,7 @@ namespace Scalepoint.OAuth.TokenClient
         /// <param name="tokenEndpointUri">OAuth2 token endpoint URI</param>
         /// <param name="clientCredentials">Client credentials</param>
         /// <param name="cache">Token cache</param>
-        public CustomGrantTokenClient(string tokenEndpointUri, IClientCredentials clientCredentials, ITokenCache cache)
+        protected CustomGrantTokenClient(string tokenEndpointUri, IClientCredentials clientCredentials, ITokenCache cache)
         {
             _tokenEndpointHttpClient = new TokenEndpointHttpClient(tokenEndpointUri);
             _clientCredentials = clientCredentials;
@@ -39,9 +39,9 @@ namespace Scalepoint.OAuth.TokenClient
                 ? string.Join(" ", scopes)
                 : null;
 
-            var cacheKey = string.Join(":", new[] { _partialCacheKey, GrantType, scopeString, parameters.GetHashCode().ToString() });
+            var cacheKey = string.Join(":", _partialCacheKey, GrantType, scopeString, parameters.GetHashCode().ToString());
 
-            return _cache.GetAsync<string>(cacheKey, () =>
+            return _cache.GetAsync(cacheKey, () =>
             {
                 var form = new List<KeyValuePair<string, string>>
                 {

@@ -57,12 +57,10 @@
     <Compile Include="InMemoryTokenCache.cs" />
     <Compile Include="ITokenCache.cs" />
     <Compile Include="ClientAssertionJwtFactory.cs" />
-    <Compile Include="JwtAssertionTokenClient.cs" />
     <Compile Include="JwtBearerClientAssertionCredentials.cs" />
     <Compile Include="JwtClaimTypes.cs" />
-    <Compile Include="PrivateKeyJwtClientCredentialsTokenClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TokenClientOptions.cs" />
+    <Compile Include="StringHashExtensions.cs" />
     <Compile Include="TokenEndpointException.cs" />
     <Compile Include="TokenEndpointHttpClient.cs" />
   </ItemGroup>

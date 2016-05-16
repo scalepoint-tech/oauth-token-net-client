@@ -5,24 +5,26 @@ namespace Tests
 {
     public class RealAuthorizationServerTest
     {
-        private readonly JwtAssertionTokenClient _tokenClient;
+        private readonly ClientCredentialsGrantTokenClient _tokenClient;
 
         public RealAuthorizationServerTest()
         {
-            var options = new TokenClientOptions()
-            {
-                TokenEndpointUrl = "https://localhost:44300/connect/token",
-                ClientId = "test_client",
-                Certificate = TestCertificate.Load()
-            };
+            var tokenEndpointUri = "https://localhost:44300/connect/token";
 
-            _tokenClient = new JwtAssertionTokenClient(options);
+            _tokenClient = new ClientCredentialsGrantTokenClient(
+                tokenEndpointUri,
+                new JwtBearerClientAssertionCredentials(
+                    tokenEndpointUri,
+                    "test_client",
+                    TestCertificate.Load()
+                ));
+
         }
 
         [Fact(Skip = "Disable until server side implementation is released in upstream so that it can be used with NuGet")]
         public async void should_get_access_token()
         {
-            var token = await _tokenClient.GetAccessTokenAsync("test_scope");
+            var token = await _tokenClient.GetTokenAsync("test_scope");
             Assert.NotNull(token);
         }
     }

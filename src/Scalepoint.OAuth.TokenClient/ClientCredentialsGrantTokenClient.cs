@@ -19,7 +19,7 @@ namespace Scalepoint.OAuth.TokenClient
         {
         }
 
-        public Task<string> GetToken(params string[] scopes)
+        public Task<string> GetTokenAsync(params string[] scopes)
         {
             return GetTokenInternal(Enumerable.Empty<KeyValuePair<string, string>>(), scopes);
         }

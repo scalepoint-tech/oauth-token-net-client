@@ -13,12 +13,12 @@ namespace Scalepoint.OAuth.TokenClient
         private readonly X509Certificate2 _certificate;
         private readonly bool _embedCertificate;
 
-        public ClientAssertionJwtFactory(TokenClientOptions options)
+        public ClientAssertionJwtFactory(string tokenEndpointUri, string clientId, X509Certificate2 certificate, bool embedCertificate = false)
         {
-            _audience = options.Audience ?? options.TokenEndpointUrl;
-            _clientId = options.ClientId;
-            _certificate = options.Certificate;
-            _embedCertificate = options.EmbedCertificate;
+            _audience = tokenEndpointUri;
+            _clientId = clientId;
+            _certificate = certificate;
+            _embedCertificate = embedCertificate;
         }
 
         public string CreateAssertionToken()

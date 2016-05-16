@@ -11,7 +11,7 @@ namespace Scalepoint.OAuth.TokenClient
         {
             _clientId = clientId;
             _clientSecret = clientSecret;
-            CredentialThumbprint = null;//TODO: DigestUtils.sha1Hex(clientId + clientSecret);
+            CredentialThumbprint = (clientId + clientSecret).Sha1Hex();
         }
 
         public List<KeyValuePair<string, string>> PostParams => new List<KeyValuePair<string, string>>()

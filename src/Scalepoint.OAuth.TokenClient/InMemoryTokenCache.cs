@@ -19,24 +19,23 @@ namespace Scalepoint.OAuth.TokenClient
         /// <summary>
         /// Returns token from cache or fetches it from the underlying source if it is not cached
         /// </summary>
-        /// <typeparam name="T">Token type</typeparam>
         /// <param name="cacheKey">Cache key</param>
         /// <param name="underlyingSource">Underlying source</param>
         /// <returns>Token</returns>
-        public Task<T> GetAsync<T>(string cacheKey, Func<Task<Tuple<T, TimeSpan>>> underlyingSource)
+        public Task<string> GetAsync(string cacheKey, Func<Task<Tuple<string, TimeSpan>>> underlyingSource)
         {
-            var cacheEntry = (T)_cache.Get(cacheKey);
+            var cacheEntry = (string)_cache.Get(cacheKey);
             return cacheEntry != null
                 ? Task.FromResult(cacheEntry)
                 : AddAndGet(cacheKey, underlyingSource);
         }
 
-        private async Task<T> AddAndGet<T>(string cacheKey, Func<Task<Tuple<T, TimeSpan>>> underlyingSource)
+        private async Task<string> AddAndGet(string cacheKey, Func<Task<Tuple<string, TimeSpan>>> underlyingSource)
         {
             await _semaphore.WaitAsync().ConfigureAwait(false);
             try
             {
-                var token = (T) _cache.Get(cacheKey);
+                var token = (string) _cache.Get(cacheKey);
                 if (token == null)
                 {
                     var expiringToken = await underlyingSource().ConfigureAwait(false);
