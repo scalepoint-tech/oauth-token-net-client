@@ -25,10 +25,18 @@ namespace Scalepoint.OAuth.TokenClient
                 var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    throw new TokenEndpointException(content);
+                    throw new TokenEndpointException($"{(int)response.StatusCode} {response.ReasonPhrase}: {content}");
                 }
 
-                return ParseResponse(content);
+                try
+                {
+                    return ParseResponse(content);
+                }
+                catch (Exception e)
+                {
+                    throw new TokenEndpointException("Invalid token response", e);
+                }
+                
             }
         }
 
