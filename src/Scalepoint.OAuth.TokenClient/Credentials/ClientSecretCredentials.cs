@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Scalepoint.OAuth.TokenClient.Internals;
 
 namespace Scalepoint.OAuth.TokenClient
 {

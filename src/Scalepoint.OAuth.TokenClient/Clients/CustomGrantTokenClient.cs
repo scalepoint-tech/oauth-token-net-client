@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Scalepoint.OAuth.TokenClient.Cache;
+using Scalepoint.OAuth.TokenClient.Internals;
 using NameValuePair=System.Collections.Generic.KeyValuePair<string, string>;
 
 namespace Scalepoint.OAuth.TokenClient

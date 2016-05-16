@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Scalepoint.OAuth.TokenClient
+namespace Scalepoint.OAuth.TokenClient.Internals
 {
     internal static class StringHashExtensions
     {

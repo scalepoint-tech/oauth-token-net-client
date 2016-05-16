@@ -1,5 +1,5 @@
 ﻿using System.Security.Cryptography.X509Certificates;
-using Scalepoint.OAuth.TokenClient;
+using Scalepoint.OAuth.TokenClient.Internals;
 using Xunit;
 
 namespace Tests

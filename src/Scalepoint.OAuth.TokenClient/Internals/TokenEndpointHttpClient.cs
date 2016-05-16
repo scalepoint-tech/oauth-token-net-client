@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Scalepoint.OAuth.TokenClient
+namespace Scalepoint.OAuth.TokenClient.Internals
 {
     internal class TokenEndpointHttpClient
     {

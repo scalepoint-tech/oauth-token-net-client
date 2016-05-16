@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IdentityModel.Tokens;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -24,7 +22,7 @@ namespace Tests
         internal class MockServerConfiguration
         {
             private readonly string _tokenEndpointUri;
-            private int _tokenId = 0;
+            private int _tokenId;
 
             public MockServerConfiguration(string tokenEndpointUri)
             {

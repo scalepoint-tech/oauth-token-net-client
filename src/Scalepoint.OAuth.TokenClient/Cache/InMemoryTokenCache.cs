@@ -3,9 +3,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Caching;
 using System.Threading;
 using System.Threading.Tasks;
+using Scalepoint.OAuth.TokenClient.Internals;
 using Scalepoint.OAuth.TokenClient.Logging;
 
-namespace Scalepoint.OAuth.TokenClient
+namespace Scalepoint.OAuth.TokenClient.Cache
 {
     /// <summary>
     /// In-memory token cache implementation

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Scalepoint.OAuth.TokenClient
+namespace Scalepoint.OAuth.TokenClient.Cache
 {
     /// <summary>
     /// No-cache token cache implementation

@@ -57,22 +57,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Packages\LibLog.4.2\LibLog.cs" />
-    <Compile Include="ClientCredentialsGrantTokenClient.cs" />
-    <Compile Include="ClientSecretCredentials.cs" />
-    <Compile Include="CustomGrantTokenClient.cs" />
-    <Compile Include="IClientCredentials.cs" />
-    <Compile Include="InMemoryTokenCache.cs" />
-    <Compile Include="ITokenCache.cs" />
-    <Compile Include="ClientAssertionJwtFactory.cs" />
-    <Compile Include="JwtBearerClientAssertionCredentials.cs" />
-    <Compile Include="JwtClaimTypes.cs" />
-    <Compile Include="NoCache.cs" />
+    <Compile Include="Clients\ClientCredentialsGrantTokenClient.cs" />
+    <Compile Include="Credentials\ClientSecretCredentials.cs" />
+    <Compile Include="Clients\CustomGrantTokenClient.cs" />
+    <Compile Include="Credentials\IClientCredentials.cs" />
+    <Compile Include="Cache\InMemoryTokenCache.cs" />
+    <Compile Include="Cache\ITokenCache.cs" />
+    <Compile Include="Internals\ClientAssertionJwtFactory.cs" />
+    <Compile Include="Credentials\JwtBearerClientAssertionCredentials.cs" />
+    <Compile Include="Internals\JwtClaimTypes.cs" />
+    <Compile Include="Cache\NoCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResourceScopedAccessGrantParameters.cs" />
-    <Compile Include="ResourceScopedAccessGrantTokenClient.cs" />
-    <Compile Include="StringHashExtensions.cs" />
+    <Compile Include="Clients\ResourceScopedAccessGrantParameters.cs" />
+    <Compile Include="Clients\ResourceScopedAccessGrantTokenClient.cs" />
+    <Compile Include="Internals\StringHashExtensions.cs" />
     <Compile Include="TokenEndpointException.cs" />
-    <Compile Include="TokenEndpointHttpClient.cs" />
+    <Compile Include="Internals\TokenEndpointHttpClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using Scalepoint.OAuth.TokenClient.Internals;
 
 namespace Scalepoint.OAuth.TokenClient
 {

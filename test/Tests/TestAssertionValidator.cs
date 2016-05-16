@@ -2,7 +2,7 @@
 using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using Scalepoint.OAuth.TokenClient;
+using Scalepoint.OAuth.TokenClient.Internals;
 
 namespace Tests
 {

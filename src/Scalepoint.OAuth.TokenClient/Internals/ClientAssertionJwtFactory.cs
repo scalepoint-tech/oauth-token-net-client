@@ -4,7 +4,7 @@ using System.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Scalepoint.OAuth.TokenClient
+namespace Scalepoint.OAuth.TokenClient.Internals
 {
     internal class ClientAssertionJwtFactory
     {
