@@ -3,11 +3,11 @@ using Xunit;
 
 namespace Tests
 {
-    public class ClientCredentialsGrantTokenClientTests : MockServerTestBase
+    public class ClientCredentialsGrantTokenClientWithJwtTests : MockServerTestBase
     {
         private readonly ClientCredentialsGrantTokenClient _tokenClient;
 
-        public ClientCredentialsGrantTokenClientTests()
+        public ClientCredentialsGrantTokenClientWithJwtTests()
         {
             _tokenClient = new ClientCredentialsGrantTokenClient(
                 TokenEndpointUri,
