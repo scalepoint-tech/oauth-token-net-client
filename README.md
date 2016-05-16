@@ -20,12 +20,31 @@ Install-Package Scalepoint.OAuth.TokenClient
 
 Obtaining access token from Authorization Server token endpoint is as simple as this:
 
+###### private_key_jwt ######
+
 ```csharp
-var tokenClient = new JwtAssertionTokenClient(
+var tokenClient = new ClientCredentialsGrantTokenClient(
                         tokenEndpointUrl,
-                        clientId,
-                        x509certificate
+                        new JwtBearerClientAssertionCredentials(
+                            tokenEndpointUrl,
+                            clientId,
+                            x509certificate
+                        )
                   );
 
-var accessToken = await tokenClient.GetAccessTokenAsync(scope1, scope2);
+var accessToken = await tokenClient.GetTokenAsync(scope1, scope2);
+```
+
+###### client_secret ######
+
+```csharp
+var tokenClient = new ClientCredentialsGrantTokenClient(
+                        tokenEndpointUrl,
+                        new ClientSecretCredentials(
+                            clientId,
+                            clientSecret
+                        )
+                  );
+
+var accessToken = await tokenClient.GetTokenAsync(scope1, scope2);
 ```
