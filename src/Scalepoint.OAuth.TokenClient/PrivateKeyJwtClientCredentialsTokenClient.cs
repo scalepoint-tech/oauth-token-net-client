@@ -12,18 +12,18 @@ namespace Scalepoint.OAuth.TokenClient
     {
         private readonly string _tokenEndpointUrl;
         private readonly string _clientId;
-        private readonly JwtAssertionFactory _jwtAssertionFactory;
+        private readonly ClientAssertionJwtFactory _clientAssertionJwtFactory;
 
         public PrivateKeyJwtClientCredentialsTokenClient(TokenClientOptions options)
         {
-            _jwtAssertionFactory = new JwtAssertionFactory(options);
+            _clientAssertionJwtFactory = new ClientAssertionJwtFactory(options);
             _tokenEndpointUrl = options.TokenEndpointUrl;
             _clientId = options.ClientId;
         }
 
         public async Task<Tuple<string, TimeSpan>> GetToken(IEnumerable<string> scopes)
         {
-            var tokenString = _jwtAssertionFactory.CreateAssertionToken();
+            var tokenString = _clientAssertionJwtFactory.CreateAssertionToken();
 
             using (var client = new HttpClient())
             {

@@ -61,7 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JwtAssertionFactoryTests.cs" />
+    <Compile Include="ClientAssertionJwtFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RealAuthorizationServerTest.cs" />
     <Compile Include="TestCertificate.cs" />

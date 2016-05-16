@@ -5,19 +5,19 @@ using Xunit;
 
 namespace Tests
 {
-    public class JwtAssertionFactoryTests
+    public class ClientAssertionJwtFactoryTests
     {
         private readonly string _tokenEndpointUrl;
         private readonly string _clientId;
         private readonly X509Certificate2 _certificate;
-        private readonly JwtAssertionFactory _factory;
+        private readonly ClientAssertionJwtFactory _factory;
 
-        public JwtAssertionFactoryTests()
+        public ClientAssertionJwtFactoryTests()
         {
             _tokenEndpointUrl = "https://authorizationserver.test/oauth2/token";
             _clientId = "test_client";
             _certificate = TestCertificate.Load();
-            _factory = new JwtAssertionFactory(new TokenClientOptions()
+            _factory = new ClientAssertionJwtFactory(new TokenClientOptions()
             {
                 TokenEndpointUrl = _tokenEndpointUrl,
                 ClientId = _clientId,

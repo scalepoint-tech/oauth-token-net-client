@@ -6,14 +6,14 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Scalepoint.OAuth.TokenClient
 {
-    internal class JwtAssertionFactory
+    internal class ClientAssertionJwtFactory
     {
         private readonly string _audience;
         private readonly string _clientId;
         private readonly X509Certificate2 _certificate;
         private readonly bool _embedCertificate;
 
-        public JwtAssertionFactory(TokenClientOptions options)
+        public ClientAssertionJwtFactory(TokenClientOptions options)
         {
             _audience = options.Audience ?? options.TokenEndpointUrl;
             _clientId = options.ClientId;
