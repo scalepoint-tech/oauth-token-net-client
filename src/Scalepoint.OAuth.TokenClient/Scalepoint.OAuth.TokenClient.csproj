@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Packages\LibLog.4.2\LibLog.cs" />
     <Compile Include="ClientCredentialsGrantTokenClient.cs" />
     <Compile Include="ClientSecretCredentials.cs" />
     <Compile Include="CustomGrantTokenClient.cs" />

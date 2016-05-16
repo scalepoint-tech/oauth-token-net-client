@@ -42,12 +42,13 @@ namespace Scalepoint.OAuth.TokenClient
                 throw new TokenEndpointException("Token endpoint response does not contain valid \"access_token\"");
             }
 
-            if (body.expires_in == null)
+            var expiresInSeconds = 0;
+            if (body.expires_in != null)
             {
-                throw new TokenEndpointException("Token endpoint response does not contain valid \"expires_in\"");
+                expiresInSeconds = body.expires_in;
             }
 
-            var expiresIn = TimeSpan.FromSeconds(Convert.ToInt32(body.expires_in));
+            var expiresIn = TimeSpan.FromSeconds(Convert.ToInt32(expiresInSeconds));
             return new Tuple<string, TimeSpan>(accessToken, expiresIn);
         }
     }

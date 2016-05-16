@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Caching;
 using System.Threading;
 using System.Threading.Tasks;
+using Scalepoint.OAuth.TokenClient.Logging;
 
 namespace Scalepoint.OAuth.TokenClient
 {
@@ -13,6 +14,7 @@ namespace Scalepoint.OAuth.TokenClient
     [SuppressMessage("ReSharper", "ClassWithVirtualMembersNeverInherited.Global")]
     public class InMemoryTokenCache : ITokenCache, IDisposable
     {
+        private readonly ILog _logger = LogProvider.GetLogger(typeof(TokenEndpointHttpClient));
         private readonly MemoryCache _cache = new MemoryCache("InMemoryTokenCache");
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
@@ -40,6 +42,10 @@ namespace Scalepoint.OAuth.TokenClient
                 {
                     var expiringToken = await underlyingSource().ConfigureAwait(false);
                     token = expiringToken.Item1;
+                    if (expiringToken.Item2 == TimeSpan.Zero)
+                    {
+                        _logger.Warn("Authorization server does not provide token expiration information. Consider using NoCache or custom cache implementation to avoid performance penalty caused by locking.");
+                    }
                     var validUntil = DateTimeOffset.UtcNow.Add(expiringToken.Item2);
                     _cache.Add(cacheKey, token, validUntil);
                 }
