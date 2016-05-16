@@ -33,13 +33,13 @@ namespace Scalepoint.OAuth.TokenClient
         /// <param name="parameters">Grant-specific parameters</param>
         /// <param name="scopes">OAuth2 scopes to request</param>
         /// <returns>Access token</returns>
-        protected Task<string> GetTokenInternal(IEnumerable<KeyValuePair<string, string>> parameters, params string[] scopes)
+        protected Task<string> GetTokenInternal(IList<KeyValuePair<string, string>> parameters, params string[] scopes)
         {
             var scopeString = scopes != null && scopes.Length >= 1
                 ? string.Join(" ", scopes)
                 : null;
 
-            var cacheKey = string.Join(":", _partialCacheKey, GrantType, scopeString, parameters.GetHashCode().ToString());
+            var cacheKey = string.Join(":", _partialCacheKey, GrantType, scopeString, GetParametersHashCode(parameters).ToString());
 
             return _cache.GetAsync(cacheKey, () =>
             {
@@ -59,6 +59,20 @@ namespace Scalepoint.OAuth.TokenClient
 
                 return _tokenEndpointHttpClient.GetToken(form);
             });
+        }
+
+        private static int GetParametersHashCode(IList<KeyValuePair<string, string>> parameters)
+        {
+            unchecked
+            {
+                int hash = 19;
+                foreach (var parameter in parameters)
+                {
+                    hash = hash * 31 + parameter.Key.GetHashCode();
+                    hash = hash * 31 + parameter.Value.GetHashCode();
+                }
+                return hash;
+            }
         }
 
         /// <summary>
