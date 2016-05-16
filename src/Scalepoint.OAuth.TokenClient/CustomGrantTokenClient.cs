@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using NameValuePair=System.Collections.Generic.KeyValuePair<string, string>;
 
 namespace Scalepoint.OAuth.TokenClient
 {
@@ -33,7 +34,7 @@ namespace Scalepoint.OAuth.TokenClient
         /// <param name="parameters">Grant-specific parameters</param>
         /// <param name="scopes">OAuth2 scopes to request</param>
         /// <returns>Access token</returns>
-        protected Task<string> GetTokenInternal(IList<KeyValuePair<string, string>> parameters, params string[] scopes)
+        protected Task<string> GetTokenInternalAsync(IList<NameValuePair> parameters, params string[] scopes)
         {
             var scopeString = scopes != null && scopes.Length >= 1
                 ? string.Join(" ", scopes)
@@ -43,9 +44,9 @@ namespace Scalepoint.OAuth.TokenClient
 
             return _cache.GetAsync(cacheKey, () =>
             {
-                var form = new List<KeyValuePair<string, string>>
+                var form = new List<NameValuePair>
                 {
-                    new KeyValuePair<string, string>("grant_type", GrantType)
+                    new NameValuePair("grant_type", GrantType)
                 };
 
                 form.AddRange(_clientCredentials.PostParams);
@@ -54,14 +55,14 @@ namespace Scalepoint.OAuth.TokenClient
 
                 if (scopeString != null)
                 {
-                    form.Add(new KeyValuePair<string, string>("scope", scopeString));
+                    form.Add(new NameValuePair("scope", scopeString));
                 }
 
                 return _tokenEndpointHttpClient.GetToken(form);
             });
         }
 
-        private static int GetParametersHashCode(IList<KeyValuePair<string, string>> parameters)
+        private static int GetParametersHashCode(IList<NameValuePair> parameters)
         {
             unchecked
             {

@@ -10,18 +10,19 @@ namespace Tests
 {
     public class MockServer
     {
-        public static IDisposable Start(out int port)
+        public static IDisposable Start(out string tokenEndpointUri)
         {
-            port = GetFreePort();
-            var url = $"http://localhost:{port}";
-            return WebApp.Start<MockServerConfiguration>(url);
+            var port = GetFreePort();
+            var uri = $"http://localhost:{port}";
+            tokenEndpointUri = $"{uri}/oauth2/token";
+            return WebApp.Start<MockServerConfiguration>(uri);
         }
 
         internal class MockServerConfiguration
         {
             public void Configuration(IAppBuilder app)
             {
-                app.Map("/oauth/token", tokenApp =>
+                app.Map("/oauth2/token", tokenApp =>
                 {
                     tokenApp.Run(TokenEndpointHandler);
                 });

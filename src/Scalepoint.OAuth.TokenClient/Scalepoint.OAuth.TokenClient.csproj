@@ -60,7 +60,10 @@
     <Compile Include="ClientAssertionJwtFactory.cs" />
     <Compile Include="JwtBearerClientAssertionCredentials.cs" />
     <Compile Include="JwtClaimTypes.cs" />
+    <Compile Include="NoCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceScopedAccessGrantParameters.cs" />
+    <Compile Include="ResourceScopedAccessGrantTokenClient.cs" />
     <Compile Include="StringHashExtensions.cs" />
     <Compile Include="TokenEndpointException.cs" />
     <Compile Include="TokenEndpointHttpClient.cs" />

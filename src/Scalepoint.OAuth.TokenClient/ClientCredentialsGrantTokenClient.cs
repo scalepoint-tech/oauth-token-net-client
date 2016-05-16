@@ -20,7 +20,7 @@ namespace Scalepoint.OAuth.TokenClient
 
         public Task<string> GetTokenAsync(params string[] scopes)
         {
-            return GetTokenInternal(new List<KeyValuePair<string, string>>(), scopes);
+            return GetTokenInternalAsync(new List<KeyValuePair<string, string>>(), scopes);
         }
 
         protected override string GrantType { get; } = "client_credentials";

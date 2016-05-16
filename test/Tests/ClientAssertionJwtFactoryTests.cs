@@ -14,7 +14,7 @@ namespace Tests
 
         public ClientAssertionJwtFactoryTests()
         {
-            _tokenEndpointUrl = "https://authorizationserver.test/oauth2/token";
+            _tokenEndpointUrl = "https://localhost/oauth2/token";
             _clientId = "test_client";
             _certificate = TestCertificate.Load();
             _factory = new ClientAssertionJwtFactory(_tokenEndpointUrl, _clientId, _certificate);
