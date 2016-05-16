@@ -87,6 +87,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ClientCredentialsGrantTokenClientTests.cs" />
     <Compile Include="ResourceScopedAccessGrantTokenClientTests.cs" />
+    <Compile Include="TestAssertionValidator.cs" />
     <Compile Include="TestCertificate.cs" />
   </ItemGroup>
   <ItemGroup>
