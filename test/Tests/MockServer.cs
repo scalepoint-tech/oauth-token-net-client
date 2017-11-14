@@ -1,35 +1,41 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Owin;
-using Microsoft.Owin.Hosting;
-using Owin;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace Tests
 {
-    public class MockServer
+    public static class MockServer
     {
         public static IDisposable Start(out string tokenEndpointUri)
         {
             var port = GetFreePort();
             var uri = $"http://localhost:{port}";
             tokenEndpointUri = $"{uri}/oauth2/token";
-            return WebApp.Start(uri, new MockServerConfiguration(tokenEndpointUri).Configuration);
+            var mockHost = new WebHostBuilder()
+                .UseUrls(uri)
+                .UseKestrel()
+                .Configure(new MockServerImpl(tokenEndpointUri).Configure)
+                .Build();
+            mockHost.Start();
+            return mockHost;
         }
 
-        internal class MockServerConfiguration
+        internal class MockServerImpl
         {
             private readonly string _tokenEndpointUri;
             private int _tokenId;
 
-            public MockServerConfiguration(string tokenEndpointUri)
+            public MockServerImpl(string tokenEndpointUri)
             {
                 _tokenEndpointUri = tokenEndpointUri;
             }
 
-            public void Configuration(IAppBuilder app)
+            public void Configure(IApplicationBuilder app)
             {
                 app.Map("/oauth2/token", tokenApp =>
                 {
@@ -37,24 +43,24 @@ namespace Tests
                 });
             }
 
-            private async Task TokenEndpointHandler(IOwinContext ctx)
+            private async Task TokenEndpointHandler(HttpContext ctx)
             {
-                if (await Validate(ctx.Request))
+                if (await Validate(ctx.Request).ConfigureAwait(false))
                 {
                     var tokenId = Interlocked.Increment(ref _tokenId);
-                    await ctx.Response.WriteAsync("{\"access_token\":\""+tokenId+"\", \"expires_in\": 3600}");
+                    await ctx.Response.WriteAsync("{\"access_token\":\""+tokenId+"\", \"expires_in\": 3600}").ConfigureAwait(false);
                 }
                 else
                 {
                     ctx.Response.StatusCode = 400;
-                    await ctx.Response.WriteAsync("{\"error\":\"error\"}");
+                    await ctx.Response.WriteAsync("{\"error\":\"error\"}").ConfigureAwait(false);
                 }
 
             }
 
-            private async Task<bool> Validate(IOwinRequest request)
+            private async Task<bool> Validate(HttpRequest request)
             {
-                var form = await request.ReadFormAsync();
+                var form = await request.ReadFormAsync().ConfigureAwait(false);
 
                 // Authentication
                 if (form["client_assertion_type"] == "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
@@ -79,8 +85,8 @@ namespace Tests
                 if (form["grant_type"] == "urn:scalepoint:params:oauth:grant-type:resource-scoped-access")
                 {
                     if (form["resource"] != "test_resource") return false;
-                    if (form["tenantId"] != null && form["tenantId"] != "test_tenant") return false;
-                    if (form["amr"] != null && form["amr"] != "pwd otp mfa") return false;
+                    if (form["tenantId"] != (string)null && form["tenantId"] != "test_tenant") return false;
+                    if (form["amr"] != (string)null && form["amr"] != "pwd otp mfa") return false;
                 }
 
                 return true;

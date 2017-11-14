@@ -1,4 +1,5 @@
-﻿using Scalepoint.OAuth.TokenClient;
+using System.Threading.Tasks;
+using Scalepoint.OAuth.TokenClient;
 using Xunit;
 
 namespace Tests
@@ -18,14 +19,14 @@ namespace Tests
         }
 
         [Fact]
-        public async void should_get_token()
+        public async Task should_get_token()
         {
             var token = await _tokenClient.GetTokenAsync("test_scope");
             Assert.NotNull(token);
         }
 
         [Fact]
-        public async void should_get_token_from_cache()
+        public async Task should_get_token_from_cache()
         {
             var token1 = await _tokenClient.GetTokenAsync("test_scope");
             var token2 = await _tokenClient.GetTokenAsync("test_scope");
@@ -33,7 +34,7 @@ namespace Tests
         }
 
         [Fact]
-        public async void should_handle_error()
+        public async Task should_handle_error()
         {
             await Assert.ThrowsAsync<TokenEndpointException>(async () =>
             {

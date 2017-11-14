@@ -1,7 +1,8 @@
-﻿using System;
-using System.IdentityModel.Tokens;
+using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.IdentityModel.Tokens;
 using Scalepoint.OAuth.TokenClient.Internals;
 
 namespace Tests
@@ -18,7 +19,7 @@ namespace Tests
                 ValidAudience = audience,
                 ValidateAudience = true,
 
-                IssuerSigningKey = new X509AsymmetricSecurityKey(signingCertificate),
+                IssuerSigningKey = new X509SecurityKey(signingCertificate),
                 ValidateIssuerSigningKey = true,
 
                 RequireSignedTokens = true,
@@ -37,7 +38,7 @@ namespace Tests
 
             var jwt = (JwtSecurityToken)token;
 
-            if (jwt.Header.Alg != JwtAlgorithms.RSA_SHA256) return false;
+            if (jwt.Header.Alg != SecurityAlgorithms.RsaSha256) return false;
             if (jwt.Subject != clientId) return false;
             if (jwt.Claims.Count(c => c.Type == JwtClaimTypes.JwtId) != 1) return false;
 

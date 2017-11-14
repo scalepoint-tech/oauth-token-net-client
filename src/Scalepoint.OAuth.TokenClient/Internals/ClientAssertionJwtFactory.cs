@@ -1,12 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens;
+using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Scalepoint.OAuth.TokenClient.Internals
 {
-    internal class ClientAssertionJwtFactory
+    public class ClientAssertionJwtFactory
     {
         private readonly string _audience;
         private readonly string _clientId;
@@ -24,27 +26,27 @@ namespace Scalepoint.OAuth.TokenClient.Internals
         public string CreateAssertionToken()
         {
             var now = DateTime.Now.ToUniversalTime();
-
+            
             var jwt = new JwtSecurityToken(_clientId,
-                                           _audience,
-                                           new List<Claim>()
-                                           {
-                                               new Claim(JwtClaimTypes.JwtId, Guid.NewGuid().ToString()),
-                                               new Claim(JwtClaimTypes.Subject, _clientId),
-                                               new Claim(JwtClaimTypes.IssuedAt, EpochTime.GetIntDate(now).ToString(), ClaimValueTypes.Integer64)
-                                           },
-                                           now,
-                                           now.AddMinutes(1),
-                                           new X509SigningCredentials(_certificate,
-                                               SecurityAlgorithms.RsaSha256Signature,
-                                               SecurityAlgorithms.Sha256Digest
-                                            )
-                        );
+                _audience,
+                new List<Claim>
+                {
+                    new Claim(JwtClaimTypes.JwtId, Guid.NewGuid().ToString()),
+                    new Claim(JwtClaimTypes.Subject, _clientId),
+                    new Claim(JwtClaimTypes.IssuedAt, EpochTime.GetIntDate(now).ToString(CultureInfo.InvariantCulture), ClaimValueTypes.Integer64)
+                },
+                now,
+                now.AddMinutes(1),
+                new SigningCredentials(
+                new X509SecurityKey(_certificate),
+                SecurityAlgorithms.RsaSha256
+                )
+            );
 
             if (_embedCertificate)
             {
                 var rawCertificate = Convert.ToBase64String(_certificate.Export(X509ContentType.Cert));
-                jwt.Header.Add(JwtHeaderParameterNames.X5c, new[] {rawCertificate});
+                jwt.Header.Add(JwtHeaderParameterNames.X5c, new[] { rawCertificate });
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();

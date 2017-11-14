@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using Scalepoint.OAuth.TokenClient.Internals;
@@ -45,10 +45,13 @@ namespace Scalepoint.OAuth.TokenClient
             {
                 throw new ArgumentException("Certificate has no private key and cannot be used for token signing", nameof(certificate));
             }
+#if NET452
             try
             {
                 // ReSharper disable once UnusedVariable
+#pragma warning disable S1481 // Unused local variables should be removed
                 var pk = certificate.PrivateKey;
+#pragma warning restore S1481 // Unused local variables should be removed
             }
             catch (Exception e)
             {
@@ -59,6 +62,7 @@ namespace Scalepoint.OAuth.TokenClient
                     nameof(certificate),
                     e);
             }
+#endif
         }
     }
 }

@@ -1,23 +1,35 @@
-﻿using System;
+using System;
 
 namespace Tests
 {
     public class MockServerTestBase : IDisposable
     {
         protected string TokenEndpointUri { get; }
-        private IDisposable _mockServer;
+        private readonly IDisposable _mockServer;
 
         public MockServerTestBase()
         {
-            string tokenEndpointUri;
-            _mockServer = MockServer.Start(out tokenEndpointUri);
+            _mockServer = MockServer.Start(out var tokenEndpointUri);
             TokenEndpointUri = tokenEndpointUri;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _mockServer?.Dispose();
+            }
         }
 
         public void Dispose()
         {
-            _mockServer.Dispose();
-            _mockServer = null;
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~MockServerTestBase()
+        {
+            Dispose(false);
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
 using Scalepoint.OAuth.TokenClient.Cache;
 using Scalepoint.OAuth.TokenClient.Internals;
 using NameValuePair=System.Collections.Generic.KeyValuePair<string, string>;
@@ -14,7 +16,7 @@ namespace Scalepoint.OAuth.TokenClient
         private readonly TokenEndpointHttpClient _tokenEndpointHttpClient;
         private readonly IClientCredentials _clientCredentials;
         private readonly string _partialCacheKey;
-        private readonly ITokenCache _cache;
+        private readonly IDistributedCache _cache;
 
         /// <summary>
         /// Create new CustomGrantTokenClient
@@ -22,7 +24,7 @@ namespace Scalepoint.OAuth.TokenClient
         /// <param name="tokenEndpointUri">OAuth2 token endpoint URI</param>
         /// <param name="clientCredentials">Client credentials</param>
         /// <param name="cache">Token cache</param>
-        protected CustomGrantTokenClient(string tokenEndpointUri, IClientCredentials clientCredentials, ITokenCache cache)
+        protected CustomGrantTokenClient(string tokenEndpointUri, IClientCredentials clientCredentials, IDistributedCache cache)
         {
             _tokenEndpointHttpClient = new TokenEndpointHttpClient(tokenEndpointUri);
             _clientCredentials = clientCredentials;
@@ -42,9 +44,9 @@ namespace Scalepoint.OAuth.TokenClient
                 ? string.Join(" ", scopes)
                 : null;
 
-            var cacheKey = string.Join(":", _partialCacheKey, GrantType, scopeString, GetParametersHashCode(parameters).ToString());
+            var cacheKey = string.Join(":", _partialCacheKey, GrantType, scopeString, GetParametersHashCode(parameters).ToString(CultureInfo.InvariantCulture));
 
-            return _cache.GetAsync(cacheKey, () =>
+            return _cache.GetOrCreateStringAsync(cacheKey, async o =>
             {
                 var form = new List<NameValuePair>
                 {
@@ -60,7 +62,9 @@ namespace Scalepoint.OAuth.TokenClient
                     form.Add(new NameValuePair("scope", scopeString));
                 }
 
-                return _tokenEndpointHttpClient.GetToken(form);
+                var result = await _tokenEndpointHttpClient.GetToken(form).ConfigureAwait(false);
+                o.AbsoluteExpirationRelativeToNow = result.expiresIn;
+                return result.token;
             });
         }
 

@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Scalepoint.OAuth.TokenClient.Cache;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Scalepoint.OAuth.TokenClient
 {
@@ -11,7 +12,7 @@ namespace Scalepoint.OAuth.TokenClient
     /// </summary>
     public class ClientCredentialsGrantTokenClient : CustomGrantTokenClient
     {
-        private static readonly Lazy<ITokenCache> DefaultTokenCache = new Lazy<ITokenCache>(() => new InMemoryTokenCache());
+        private static readonly Lazy<IDistributedCache> DefaultTokenCache = new Lazy<IDistributedCache>(() => new MemoryDistributedCache(new MemoryCache(new MemoryCacheOptions())));
 
         /// <summary>
         /// Creates new ClientCredentialsGrantTokenClient
@@ -29,7 +30,7 @@ namespace Scalepoint.OAuth.TokenClient
         /// <param name="tokenEndpointUri">OAuth2 Token endpoint URI</param>
         /// <param name="clientCredentials">OAuth2 client credentials</param>
         /// <param name="cache">Token cache</param>
-        public ClientCredentialsGrantTokenClient(string tokenEndpointUri, IClientCredentials clientCredentials, ITokenCache cache)
+        public ClientCredentialsGrantTokenClient(string tokenEndpointUri, IClientCredentials clientCredentials, IDistributedCache cache)
             : base(tokenEndpointUri, clientCredentials, cache)
         {
         }

@@ -18,13 +18,13 @@ namespace Scalepoint.OAuth.TokenClient.Internals
             _tokenEndpointUri = tokenEndpointUri;
         }
 
-        public async Task<Tuple<string, TimeSpan>> GetToken(List<KeyValuePair<string, string>> parameters)
+        public async Task<(string token, TimeSpan expiresIn)> GetToken(List<KeyValuePair<string, string>> parameters)
         {
             var client = GetClient();
             var requestBody = new FormUrlEncodedContent(parameters);
             var response = await client.PostAsync(_tokenEndpointUri, requestBody).ConfigureAwait(false);
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            if (response.StatusCode != HttpStatusCode.OK)
+            if (!response.IsSuccessStatusCode)
             {
                 throw new TokenEndpointException($"{(int)response.StatusCode} {response.ReasonPhrase}: {content}");
             }
@@ -44,7 +44,7 @@ namespace Scalepoint.OAuth.TokenClient.Internals
             return ClientsPool.GetOrAdd(_tokenEndpointUri, uri => new HttpClient());
         }
 
-        private static Tuple<string, TimeSpan> ParseResponse(string content)
+        private static (string, TimeSpan) ParseResponse(string content)
         {
             var body = JObject.Parse(content);
             var accessToken = body.Property("access_token").Value.Value<string>();
@@ -62,7 +62,7 @@ namespace Scalepoint.OAuth.TokenClient.Internals
             }
 
             var expiresIn = TimeSpan.FromSeconds(Convert.ToInt32(expiresInSeconds));
-            return new Tuple<string, TimeSpan>(accessToken, expiresIn);
+            return (accessToken, expiresIn);
         }
     }
 }

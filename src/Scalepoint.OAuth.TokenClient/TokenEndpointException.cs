@@ -6,6 +6,7 @@ namespace Scalepoint.OAuth.TokenClient
     /// <summary>
     /// Represents OAuth2 token endpoint error
     /// </summary>
+    [Serializable]
     public class TokenEndpointException : Exception
     {
         public TokenEndpointException()
@@ -20,8 +21,10 @@ namespace Scalepoint.OAuth.TokenClient
         {
         }
 
+#if NET452
         protected TokenEndpointException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
+#endif
     }
 }

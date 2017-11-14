@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Scalepoint.OAuth.TokenClient;
 using Xunit;
 
@@ -20,14 +21,14 @@ namespace Tests
         }
 
         [Fact]
-        public async void should_get_token()
+        public async Task should_get_token()
         {
             var token = await _tokenClient.GetTokenAsync(new ResourceScopedAccessGrantParameters("test_scope", "test_resource"));
             Assert.NotNull(token);
         }
 
         [Fact]
-        public async void should_get_token_with_optional_parameters()
+        public async Task should_get_token_with_optional_parameters()
         {
             var token = await _tokenClient.GetTokenAsync(
                 new ResourceScopedAccessGrantParameters(
@@ -40,7 +41,7 @@ namespace Tests
         }
 
         [Fact]
-        public async void should_handle_error()
+        public async Task should_handle_error()
         {
             await Assert.ThrowsAsync<TokenEndpointException>(async () =>
             {
