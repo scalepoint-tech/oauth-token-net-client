@@ -1,7 +1,7 @@
 # OAuth Token Endpoint Client for .NET #
 
 ## Description ##
-Client helper for OAuth 2.0 Token endpoint. Supports "Client Credentials" flow with "client_secret", RS256 JWT "client_assertion" and custom grants.
+Client helper for OAuth2 Token endpoint. Supports "Client Credentials" flow with "client_secret", RS256 JWT "client_assertion", custom grants and token caching.
 
 ## Features ##
 - Client Credentials Grant (2-Legged OAuth)
@@ -32,7 +32,7 @@ var tokenClient = new ClientCredentialsGrantTokenClient(
                         )
                   );
 
-var accessToken = await tokenClient.GetTokenAsync(scope1, scope2);
+var accessToken = await tokenClient.GetTokenAsync(new [] { scope1, scope2 });
 ```
 
 ###### client_secret ######
@@ -46,5 +46,5 @@ var tokenClient = new ClientCredentialsGrantTokenClient(
                         )
                   );
 
-var accessToken = await tokenClient.GetTokenAsync(scope1, scope2);
+var accessToken = await tokenClient.GetTokenAsync(new [] { scope1, scope2 });
 ```
