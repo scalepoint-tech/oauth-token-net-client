@@ -1,9 +1,17 @@
 <Project>
   <PropertyGroup>
     <Version Condition=" '$(Version)' == '' ">0.0-snapshot</Version>
+    <Authors>Scalepoint</Authors>
+    <Owners>scalepoint</Owners>
     <Copyright>Scalepoint Technologies Denmark A/S</Copyright>
     <Company>Scalepoint Technologies Denmark A/S</Company>
     <Product>Scalepoint.OAuth.TokenClient</Product>
+    <RepositoryUrl>https://github.com/Scalepoint/oauth-token-net-client</RepositoryUrl>
+    <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Scalepoint/oauth-token-net-client</PackageProjectUrl>
+    <PackageTags>OAuth2 ClientCredentials ClientAssertion JwtBearer PrivateKeyJwt</PackageTags>
+    <IncludeSource>true</IncludeSource>
+    <IncludeSymbols>true</IncludeSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <TreatWarningsAsErrors Condition=" '$(Configuration)' == 'Release' ">true</TreatWarningsAsErrors>

@@ -4,6 +4,7 @@
         <TargetFrameworks>net451;netstandard1.4;netstandard2.0</TargetFrameworks>
     </PropertyGroup>
     <PropertyGroup>
+        <Description>Client helper for OAuth2 2-legged flows with client secret and JWT client assertion support and token caching</Description>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
