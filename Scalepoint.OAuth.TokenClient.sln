@@ -16,11 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SigningKey.snk = SigningKey.snk
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{17C9F8EB-5E7A-431D-9682-58D7B833DE87}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{17C9F8EB-5E7A-431D-9682-58D7B833DE87}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scalepoint.OAuth.TokenClient", "src\Scalepoint.OAuth.TokenClient\Scalepoint.OAuth.TokenClient.csproj", "{15FE1FF7-3010-482D-8FA4-FB22EE5C3BA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "test\Tests\Tests.csproj", "{33AE3DC9-BC03-4B20-A437-5C99C5816615}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "tests\Tests\Tests.csproj", "{33AE3DC9-BC03-4B20-A437-5C99C5816615}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
