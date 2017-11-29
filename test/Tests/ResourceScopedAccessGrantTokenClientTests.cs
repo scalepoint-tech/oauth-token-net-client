@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Scalepoint.OAuth.TokenClient;
 using Xunit;
@@ -18,6 +19,19 @@ namespace Tests
                     "test_client",
                     TestCertificate.Load()
                 ));
+        }
+
+        [Fact]
+        public async Task should_cancel()
+        {
+            await Assert.ThrowsAsync<TaskCanceledException>(
+                () => _tokenClient.GetTokenAsync(new ResourceScopedAccessGrantParameters("test_scope", "test_resource"), new CancellationToken(true)));
+        }
+
+        [Fact]
+        public async Task should_not_cancel()
+        {
+            await _tokenClient.GetTokenAsync(new ResourceScopedAccessGrantParameters("test_scope", "test_resource"), new CancellationToken(false));
         }
 
         [Fact]

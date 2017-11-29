@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Scalepoint.OAuth.TokenClient.Cache;
 using NameValuePair=System.Collections.Generic.KeyValuePair<string, string>;
@@ -26,9 +27,9 @@ namespace Scalepoint.OAuth.TokenClient
         /// <param name="parameters">Custom grant parameters</param>
         /// <returns>Access token</returns>
         /// <exception cref="TokenEndpointException">Exception during token endpoint communication</exception>
-        public Task<string> GetTokenAsync(ResourceScopedAccessGrantParameters parameters)
+        public Task<string> GetTokenAsync(ResourceScopedAccessGrantParameters parameters, CancellationToken token = default(CancellationToken))
         {
-            return GetTokenInternalAsync(GetPostParams(parameters), parameters.Scope);
+            return GetTokenInternalAsync(GetPostParams(parameters), new [] { parameters.Scope }, token);
         }
 
         private IList<NameValuePair> GetPostParams(ResourceScopedAccessGrantParameters grantParameters)

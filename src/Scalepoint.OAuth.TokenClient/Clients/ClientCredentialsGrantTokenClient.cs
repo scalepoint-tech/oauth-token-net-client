@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
@@ -52,11 +53,12 @@ namespace Scalepoint.OAuth.TokenClient
         /// Retrieve access token for the configured "client_id" and specified scopes. Request to the server is only performed if matching valid token is not in the cache
         /// </summary>
         /// <param name="scopes">OAuth2 scopes to request</param>
+        /// <param name="token">Cancellation token</param>
         /// <returns>Access token</returns>
         /// <exception cref="TokenEndpointException">Exception during token endpoint communication</exception>
-        public Task<string> GetTokenAsync(params string[] scopes)
+        public Task<string> GetTokenAsync(string[] scopes, CancellationToken token = default(CancellationToken))
         {
-            return GetTokenInternalAsync(new List<KeyValuePair<string, string>>(), scopes);
+            return GetTokenInternalAsync(new List<KeyValuePair<string, string>>(), scopes, token);
         }
 
         protected override string GrantType { get; } = "client_credentials";

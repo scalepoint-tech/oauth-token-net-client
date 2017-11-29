@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Scalepoint.OAuth.TokenClient.Cache;
@@ -38,7 +39,7 @@ namespace Scalepoint.OAuth.TokenClient
         /// <param name="parameters">Grant-specific parameters</param>
         /// <param name="scopes">OAuth2 scopes to request</param>
         /// <returns>Access token</returns>
-        protected Task<string> GetTokenInternalAsync(IList<NameValuePair> parameters, params string[] scopes)
+        protected Task<string> GetTokenInternalAsync(IList<NameValuePair> parameters, string[] scopes, CancellationToken token)
         {
             var scopeString = scopes != null && scopes.Length >= 1
                 ? string.Join(" ", scopes)
@@ -46,7 +47,7 @@ namespace Scalepoint.OAuth.TokenClient
 
             var cacheKey = string.Join(":", _partialCacheKey, GrantType, scopeString, GetParametersHashCode(parameters).ToString(CultureInfo.InvariantCulture));
 
-            return _cache.GetOrCreateStringAsync(cacheKey, async o =>
+            return _cache.GetOrCreateStringAsync(cacheKey, async (cacheEntryOptions, ct) =>
             {
                 var form = new List<NameValuePair>
                 {
@@ -62,10 +63,10 @@ namespace Scalepoint.OAuth.TokenClient
                     form.Add(new NameValuePair("scope", scopeString));
                 }
 
-                var result = await _tokenEndpointHttpClient.GetToken(form).ConfigureAwait(false);
-                o.AbsoluteExpirationRelativeToNow = result.expiresIn;
+                var result = await _tokenEndpointHttpClient.GetToken(form, ct).ConfigureAwait(false);
+                cacheEntryOptions.AbsoluteExpirationRelativeToNow = result.expiresIn;
                 return result.token;
-            });
+            }, token);
         }
 
         private static int GetParametersHashCode(IList<NameValuePair> parameters)

@@ -22,15 +22,15 @@ namespace Tests
         [Fact]
         public async Task should_get_token()
         {
-            var token = await _tokenClient.GetTokenAsync("test_scope");
+            var token = await _tokenClient.GetTokenAsync(new [] { "test_scope" });
             Assert.NotNull(token);
         }
 
         [Fact]
         public async Task should_get_token_from_cache()
         {
-            var token1 = await _tokenClient.GetTokenAsync("test_scope");
-            var token2 = await _tokenClient.GetTokenAsync("test_scope");
+            var token1 = await _tokenClient.GetTokenAsync(new[] { "test_scope" });
+            var token2 = await _tokenClient.GetTokenAsync(new[] { "test_scope" });
             Assert.Equal(token1, token2);
         }
 
@@ -39,7 +39,7 @@ namespace Tests
         {
             await Assert.ThrowsAsync<TokenEndpointException>(async () =>
             {
-                await _tokenClient.GetTokenAsync("test_scope", "invalid_scope");
+                await _tokenClient.GetTokenAsync(new[] { "test_scope", "invalid_scope" });
             });
         }
     }

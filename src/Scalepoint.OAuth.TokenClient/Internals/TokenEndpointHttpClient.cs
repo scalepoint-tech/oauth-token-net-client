@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
@@ -18,11 +18,11 @@ namespace Scalepoint.OAuth.TokenClient.Internals
             _tokenEndpointUri = tokenEndpointUri;
         }
 
-        public async Task<(string token, TimeSpan expiresIn)> GetToken(List<KeyValuePair<string, string>> parameters)
+        public async Task<(string token, TimeSpan expiresIn)> GetToken(List<KeyValuePair<string, string>> parameters, CancellationToken token)
         {
             var client = GetClient();
             var requestBody = new FormUrlEncodedContent(parameters);
-            var response = await client.PostAsync(_tokenEndpointUri, requestBody).ConfigureAwait(false);
+            var response = await client.PostAsync(_tokenEndpointUri, requestBody, token).ConfigureAwait(false);
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
             {
