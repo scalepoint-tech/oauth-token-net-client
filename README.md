@@ -10,7 +10,7 @@ Client helper for OAuth2 Token endpoint. Supports "Client Credentials" flow with
 - Custom grant support. I.e. for custom assertion grants.
 - **Access token caching**. Uses in-memory cache by default. Caching key includes all parameters, so it is safe to use with more than one Authorization Server, credential set or OAuth scope list.
 
-_If you need support for other grant types or authentication methods, please check [IdentityModel](https://github.com/IdentityModel/IdentityModel)._
+_If you need support for other grant types or authentication methods, please check [IdentityModel2](https://github.com/IdentityModel/IdentityModel2)._
 
 ## Getting started ##
 Install from NuGet:
