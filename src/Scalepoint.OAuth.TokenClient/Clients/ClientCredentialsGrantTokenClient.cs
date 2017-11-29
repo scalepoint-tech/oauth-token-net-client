@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 
 namespace Scalepoint.OAuth.TokenClient
 {
@@ -12,7 +13,19 @@ namespace Scalepoint.OAuth.TokenClient
     /// </summary>
     public class ClientCredentialsGrantTokenClient : CustomGrantTokenClient
     {
-        private static readonly Lazy<IDistributedCache> DefaultTokenCache = new Lazy<IDistributedCache>(() => new MemoryDistributedCache(new MemoryCache(new MemoryCacheOptions())));
+
+#if NETSTANDARD2_0
+        private static readonly Lazy<IDistributedCache> DefaultTokenCache = new Lazy<IDistributedCache>(
+            () => new MemoryDistributedCache(
+                new OptionsWrapper<MemoryDistributedCacheOptions>(
+                    new MemoryDistributedCacheOptions())));
+#else
+        private static readonly Lazy<IDistributedCache> DefaultTokenCache = new Lazy<IDistributedCache>(
+            () => new MemoryDistributedCache(
+                new MemoryCache(
+                    new OptionsWrapper<MemoryCacheOptions>(
+                        new MemoryCacheOptions()))));
+#endif
 
         /// <summary>
         /// Creates new ClientCredentialsGrantTokenClient

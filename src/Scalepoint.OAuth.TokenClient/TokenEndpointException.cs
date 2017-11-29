@@ -21,7 +21,7 @@ namespace Scalepoint.OAuth.TokenClient
         {
         }
 
-#if NET452
+#if !NETSTANDARD1_4
         protected TokenEndpointException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }

@@ -45,7 +45,7 @@ namespace Scalepoint.OAuth.TokenClient
             {
                 throw new ArgumentException("Certificate has no private key and cannot be used for token signing", nameof(certificate));
             }
-#if NET452
+#if !NETSTANDARD1_4
             try
             {
                 // ReSharper disable once UnusedVariable
