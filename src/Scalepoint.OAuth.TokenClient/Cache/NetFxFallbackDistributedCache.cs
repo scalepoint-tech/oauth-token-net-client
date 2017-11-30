@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Scalepoint.OAuth.TokenClient.Cache
 {
-#if NET451
+#if NET45
     // A minimally required custom IDistributedCache elements for net451 target to avoid pulling in the whole NETStandard.Library
     using System.Runtime.Caching;
 

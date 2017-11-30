@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\Shared.targets" />
     <PropertyGroup>
-        <TargetFrameworks>net451;netstandard1.4;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net45;netstandard1.4;netstandard2.0</TargetFrameworks>
     </PropertyGroup>
     <PropertyGroup>
         <Description>Client helper for OAuth2 2-legged flows with client secret and JWT client assertion support and token caching</Description>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'net451' ">
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>..\..\SigningKey.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
@@ -25,7 +25,7 @@
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.0.0" />
     </ItemGroup>
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
         <Reference Include="System.Runtime.Caching" />
     </ItemGroup>
 </Project>

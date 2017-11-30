@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-#if !NET451
+#if !NET45
 using Microsoft.Extensions.Caching.Distributed;
 #endif
 
