@@ -13,20 +13,19 @@ namespace Scalepoint.OAuth.TokenClient.Internals
         private readonly string _audience;
         private readonly string _clientId;
         private readonly X509Certificate2 _certificate;
-        private readonly bool _embedCertificate;
 
-        public ClientAssertionJwtFactory(string tokenEndpointUri, string clientId, X509Certificate2 certificate, bool embedCertificate = false)
+        public ClientAssertionJwtFactory(string tokenEndpointUri, string clientId, X509Certificate2 certificate)
         {
             _audience = tokenEndpointUri;
             _clientId = clientId;
             _certificate = certificate;
-            _embedCertificate = embedCertificate;
         }
 
         public string CreateAssertionToken()
         {
             var now = DateTime.Now.ToUniversalTime();
-            
+
+            var securityKey = new X509SecurityKey(_certificate);
             var jwt = new JwtSecurityToken(_clientId,
                 _audience,
                 new List<Claim>
@@ -38,16 +37,15 @@ namespace Scalepoint.OAuth.TokenClient.Internals
                 now,
                 now.AddMinutes(1),
                 new SigningCredentials(
-                new X509SecurityKey(_certificate),
+                securityKey,
                 SecurityAlgorithms.RsaSha256
                 )
             );
 
-            if (_embedCertificate)
-            {
-                var rawCertificate = Convert.ToBase64String(_certificate.Export(X509ContentType.Cert));
-                jwt.Header.Add(JwtHeaderParameterNames.X5c, new[] { rawCertificate });
-            }
+            // ReSharper disable once PossibleNullReferenceException
+#pragma warning disable CA1308 // Normalize strings to uppercase
+            jwt.Header.Add(JwtHeaderParameterNames.X5t, securityKey.X5t);
+#pragma warning restore CA1308 // Normalize strings to uppercase
 
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(jwt);

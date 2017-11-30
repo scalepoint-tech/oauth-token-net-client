@@ -94,12 +94,20 @@ namespace Tests
 
             private bool ValidateAssertion(string assertion)
             {
-                return TestAssertionValidator.Validate(
-                    assertion,
-                    _tokenEndpointUri,
-                    "test_client",
-                    TestCertificate.Load()
-                );
+                try
+                {
+                    TestAssertionValidator.Validate(
+                        assertion,
+                        _tokenEndpointUri,
+                        "test_client",
+                        TestCertificate.Load()
+                    );
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
             }
         }
 

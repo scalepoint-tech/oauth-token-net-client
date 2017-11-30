@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography.X509Certificates;
 using Scalepoint.OAuth.TokenClient.Internals;
 using Xunit;
 
@@ -24,14 +24,12 @@ namespace Tests
         {
             var tokenString = _factory.CreateAssertionToken();
 
-            var isValid = TestAssertionValidator.Validate(
-                    tokenString,
-                    _tokenEndpointUri,
-                    _clientId,
-                    _certificate
-                );
-
-            Assert.True(isValid);
+            TestAssertionValidator.Validate(
+                tokenString,
+                _tokenEndpointUri,
+                _clientId,
+                _certificate
+            );
         }
     }
 }
