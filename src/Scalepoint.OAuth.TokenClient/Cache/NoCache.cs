@@ -1,6 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
+#if !NET451
 using Microsoft.Extensions.Caching.Distributed;
+#endif
 
 namespace Scalepoint.OAuth.TokenClient.Cache
 {
@@ -69,5 +71,17 @@ namespace Scalepoint.OAuth.TokenClient.Cache
             return Task.FromResult(0);
         }
 #endif
+
+#if NET451
+        public Task<string> GetStringAsync(string key)
+        {
+            return Task.FromResult((string)null);
+        }
+        public Task SetStringAsync(string key, string value, DistributedCacheEntryOptions options)
+        {
+            return Task.FromResult(0);
+        }
+#endif
+
     }
 }

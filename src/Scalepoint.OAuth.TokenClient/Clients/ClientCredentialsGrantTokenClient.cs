@@ -2,9 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+#if NET451
+using Scalepoint.OAuth.TokenClient.Cache;
+#else
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+#endif
 
 namespace Scalepoint.OAuth.TokenClient
 {
@@ -20,6 +24,9 @@ namespace Scalepoint.OAuth.TokenClient
             () => new MemoryDistributedCache(
                 new OptionsWrapper<MemoryDistributedCacheOptions>(
                     new MemoryDistributedCacheOptions())));
+#elif NET451
+        private static readonly Lazy<IDistributedCache> DefaultTokenCache = new Lazy<IDistributedCache>(
+            () => new FullFrameworkMemoryDistributedCache());
 #else
         private static readonly Lazy<IDistributedCache> DefaultTokenCache = new Lazy<IDistributedCache>(
             () => new MemoryDistributedCache(

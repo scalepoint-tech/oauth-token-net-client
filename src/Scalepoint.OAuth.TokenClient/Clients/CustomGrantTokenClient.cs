@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+#if !NET451
 using Microsoft.Extensions.Caching.Distributed;
+#endif
 using Scalepoint.OAuth.TokenClient.Cache;
 using Scalepoint.OAuth.TokenClient.Internals;
 using NameValuePair=System.Collections.Generic.KeyValuePair<string, string>;

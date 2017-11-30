@@ -1,7 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+#if !NET451
 using Microsoft.Extensions.Caching.Distributed;
+#endif
 
 namespace Scalepoint.OAuth.TokenClient.Cache
 {
