@@ -18,7 +18,7 @@ namespace Scalepoint.OAuth.TokenClient.Internals
             _tokenEndpointUri = tokenEndpointUri;
         }
 
-        public async Task<(string token, TimeSpan expiresIn)> GetToken(List<KeyValuePair<string, string>> parameters, CancellationToken token)
+        public async Task<Tuple<string, TimeSpan>> GetToken(List<KeyValuePair<string, string>> parameters, CancellationToken token)
         {
             var client = GetClient();
             var requestBody = new FormUrlEncodedContent(parameters);
@@ -44,7 +44,7 @@ namespace Scalepoint.OAuth.TokenClient.Internals
             return ClientsPool.GetOrAdd(_tokenEndpointUri, uri => new HttpClient());
         }
 
-        private static (string, TimeSpan) ParseResponse(string content)
+        private static Tuple<string, TimeSpan> ParseResponse(string content)
         {
             var body = JObject.Parse(content);
             var accessToken = body.Property("access_token").Value.Value<string>();
@@ -62,7 +62,7 @@ namespace Scalepoint.OAuth.TokenClient.Internals
             }
 
             var expiresIn = TimeSpan.FromSeconds(Convert.ToInt32(expiresInSeconds));
-            return (accessToken, expiresIn);
+            return new Tuple<string, TimeSpan>(accessToken, expiresIn);
         }
     }
 }

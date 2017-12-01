@@ -66,8 +66,8 @@ namespace Scalepoint.OAuth.TokenClient
                 }
 
                 var result = await _tokenEndpointHttpClient.GetToken(form, ct).ConfigureAwait(false);
-                cacheEntryOptions.AbsoluteExpirationRelativeToNow = result.expiresIn;
-                return result.token;
+                cacheEntryOptions.AbsoluteExpirationRelativeToNow = result.Item2;
+                return result.Item1;
             }, token);
         }
 
