@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
+#if NET45
+using System.IdentityModel.Tokens;
+#else
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+#endif
 
 namespace Scalepoint.OAuth.TokenClient.Internals
 {
@@ -25,7 +29,16 @@ namespace Scalepoint.OAuth.TokenClient.Internals
         {
             var now = DateTime.Now.ToUniversalTime();
 
+#if NET45
+            var signingCredentials = new X509SigningCredentials(_certificate);
+#else
             var securityKey = new X509SecurityKey(_certificate);
+            var signingCredentials = new SigningCredentials(
+                securityKey,
+                SecurityAlgorithms.RsaSha256
+            );
+#endif
+
             var jwt = new JwtSecurityToken(_clientId,
                 _audience,
                 new List<Claim>
@@ -36,16 +49,17 @@ namespace Scalepoint.OAuth.TokenClient.Internals
                 },
                 now,
                 now.AddMinutes(1),
-                new SigningCredentials(
-                securityKey,
-                SecurityAlgorithms.RsaSha256
-                )
+                signingCredentials
             );
 
-            // ReSharper disable once PossibleNullReferenceException
+#if NET45
+            jwt.Header.Add(JwtHeaderParameterNames.Kid, _certificate.Thumbprint);
+#else
+// ReSharper disable once PossibleNullReferenceException
 #pragma warning disable CA1308 // Normalize strings to uppercase
             jwt.Header.Add(JwtHeaderParameterNames.X5t, securityKey.X5t);
 #pragma warning restore CA1308 // Normalize strings to uppercase
+#endif
 
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(jwt);
