@@ -38,6 +38,15 @@ namespace Tests
         }
 
         [Fact]
+        public async Task should_complete_before_canceled()
+        {
+            using (var cts = new CancellationTokenSource(5000))
+            {
+                await _tokenClient.GetTokenAsync(new ResourceScopedAccessGrantParameters("test_scope", "test_resource"), new CancellationToken(false));
+            }
+        }
+
+        [Fact]
         public async Task should_not_cancel()
         {
             await _tokenClient.GetTokenAsync(new ResourceScopedAccessGrantParameters("test_scope", "test_resource"), new CancellationToken(false));

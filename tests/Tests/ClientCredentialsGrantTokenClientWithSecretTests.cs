@@ -36,6 +36,15 @@ namespace Tests
         }
 
         [Fact]
+        public async Task should_complete_before_canceled()
+        {
+            using (var cts = new CancellationTokenSource(5000))
+            {
+                await _tokenClient.GetTokenAsync(new[] { "test_scope" }, cts.Token);
+            }
+        }
+
+        [Fact]
         public async Task should_not_cancel()
         {
             await _tokenClient.GetTokenAsync(new[] { "test_scope" }, new CancellationToken(false));

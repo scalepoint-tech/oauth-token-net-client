@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Scalepoint.OAuth.TokenClient;
 using Xunit;
@@ -28,6 +29,27 @@ namespace Tests
             }
         }
 
+        [Fact]
+        public async Task should_cancel()
+        {
+            await Assert.ThrowsAsync<TaskCanceledException>(
+                () => _tokenClient.GetTokenAsync(new[] { "test_scope" }, new CancellationToken(true)));
+        }
+
+        [Fact]
+        public async Task should_complete_before_canceled()
+        {
+            using (var cts = new CancellationTokenSource(5000))
+            {
+                await _tokenClient.GetTokenAsync(new[] { "test_scope" }, cts.Token);
+            }
+        }
+
+        [Fact]
+        public async Task should_not_cancel()
+        {
+            await _tokenClient.GetTokenAsync(new[] { "test_scope" }, new CancellationToken(false));
+        }
         [Fact]
         public async Task should_get_token()
         {
