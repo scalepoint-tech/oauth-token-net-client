@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
@@ -8,9 +7,10 @@ using Newtonsoft.Json.Linq;
 
 namespace Scalepoint.OAuth.TokenClient.Internals
 {
-    internal class TokenEndpointHttpClient
+    // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
+    internal class TokenEndpointHttpClient : IDisposable
     {
-        private static readonly ConcurrentDictionary<string, HttpClient> ClientsPool = new ConcurrentDictionary<string, HttpClient>();
+        private readonly HttpClient _httpClient = new HttpClient();
         private readonly string _tokenEndpointUri;
 
         public TokenEndpointHttpClient(string tokenEndpointUri)
@@ -20,9 +20,8 @@ namespace Scalepoint.OAuth.TokenClient.Internals
 
         public async Task<Tuple<string, TimeSpan>> GetToken(List<KeyValuePair<string, string>> parameters, CancellationToken token)
         {
-            var client = GetClient();
             var requestBody = new FormUrlEncodedContent(parameters);
-            var response = await client.PostAsync(_tokenEndpointUri, requestBody, token).ConfigureAwait(false);
+            var response = await _httpClient.PostAsync(_tokenEndpointUri, requestBody, token).ConfigureAwait(false);
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
             {
@@ -37,11 +36,6 @@ namespace Scalepoint.OAuth.TokenClient.Internals
             {
                 throw new TokenEndpointException("Invalid token response", e);
             }
-        }
-
-        private HttpClient GetClient()
-        {
-            return ClientsPool.GetOrAdd(_tokenEndpointUri, uri => new HttpClient());
         }
 
         private static Tuple<string, TimeSpan> ParseResponse(string content)
@@ -63,6 +57,32 @@ namespace Scalepoint.OAuth.TokenClient.Internals
 
             var expiresIn = TimeSpan.FromSeconds(Convert.ToInt32(expiresInSeconds));
             return new Tuple<string, TimeSpan>(accessToken, expiresIn);
+        }
+
+        bool _disposed;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~TokenEndpointHttpClient()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _httpClient.Dispose();
+            }
+
+            _disposed = true;
         }
     }
 }

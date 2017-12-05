@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
@@ -14,7 +15,7 @@ namespace Scalepoint.OAuth.TokenClient
     /// <summary>
     /// Abstract token endpoint client, extendable to handle custom token endpoint grants
     /// </summary>
-    public abstract class CustomGrantTokenClient
+    public abstract class CustomGrantTokenClient : IDisposable
     {
         private readonly TokenEndpointHttpClient _tokenEndpointHttpClient;
         private readonly IClientCredentials _clientCredentials;
@@ -89,5 +90,31 @@ namespace Scalepoint.OAuth.TokenClient
         /// Grant type (i.e. "client_credentials")
         /// </summary>
         protected abstract string GrantType { get; }
+
+        bool _disposed;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~CustomGrantTokenClient()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _tokenEndpointHttpClient.Dispose();
+            }
+
+            _disposed = true;
+        }
     }
 }

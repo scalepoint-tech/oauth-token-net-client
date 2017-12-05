@@ -19,6 +19,15 @@ namespace Tests
                 ));
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing)
+            {
+                _tokenClient.Dispose();
+            }
+        }
+
         [Fact]
         public async Task should_cancel()
         {
