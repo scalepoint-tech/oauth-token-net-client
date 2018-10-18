@@ -1,6 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net45;netstandard1.4;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     </PropertyGroup>
     <PropertyGroup>
         <Description>Client helper for OAuth2 2-legged flows with client secret and JWT client assertion support and token caching</Description>
@@ -11,12 +11,6 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    </ItemGroup>
-    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.4' ">
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="1.1.2" />
-        <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.1" />
-        <PackageReference Include="System.Net.Http" Version="4.3.3" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.1.5" />
     </ItemGroup>
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.0.0" />

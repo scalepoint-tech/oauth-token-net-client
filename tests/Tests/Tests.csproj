@@ -1,6 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net451;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
+        <TargetFrameworks>net451;netcoreapp2.0</TargetFrameworks>
         <NoWarn>$(NoWarn);CA1707;CA2007</NoWarn>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(TargetFramework)' == 'net451' ">
