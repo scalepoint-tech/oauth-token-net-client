@@ -2,13 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-#if NET45
 using Scalepoint.OAuth.TokenClient.Cache;
-#else
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
-#endif
+using Scalepoint.OAuth.TokenClient.Internals;
 
 namespace Scalepoint.OAuth.TokenClient
 {
@@ -16,24 +11,11 @@ namespace Scalepoint.OAuth.TokenClient
     /// OAuth2 Token endpoint client with "client_credentials" grant support
     /// Tokens are cached in-memory by default
     /// </summary>
-    public class ClientCredentialsGrantTokenClient : CustomGrantTokenClient
+    public sealed class ClientCredentialsGrantTokenClient : IDisposable
     {
-
-#if NETSTANDARD2_0
-        private static readonly Lazy<IDistributedCache> DefaultTokenCache = new Lazy<IDistributedCache>(
-            () => new MemoryDistributedCache(
-                new OptionsWrapper<MemoryDistributedCacheOptions>(
-                    new MemoryDistributedCacheOptions())));
-#elif NET45
-        private static readonly Lazy<IDistributedCache> DefaultTokenCache = new Lazy<IDistributedCache>(
-            () => new FullFrameworkMemoryDistributedCache());
-#else
-        private static readonly Lazy<IDistributedCache> DefaultTokenCache = new Lazy<IDistributedCache>(
-            () => new MemoryDistributedCache(
-                new MemoryCache(
-                    new OptionsWrapper<MemoryCacheOptions>(
-                        new MemoryCacheOptions()))));
-#endif
+        private readonly CustomGrantTokenClient _customGrantTokenClient;
+        private readonly ICache<string> _cache;
+        private readonly string _partialCacheKey;
 
         /// <summary>
         /// Creates new ClientCredentialsGrantTokenClient
@@ -41,8 +23,15 @@ namespace Scalepoint.OAuth.TokenClient
         /// <param name="tokenEndpointUri">OAuth2 Token endpoint URI</param>
         /// <param name="clientCredentials">OAuth2 client credentials</param>
         public ClientCredentialsGrantTokenClient(string tokenEndpointUri, IClientCredentials clientCredentials)
-            : base(tokenEndpointUri, clientCredentials, DefaultTokenCache.Value)
         {
+            if (_cache == null)
+            {
+                _cache = new InMemoryCache<string>();
+            }
+
+            const string grantType = "client_credentials";
+            _customGrantTokenClient = new CustomGrantTokenClient(tokenEndpointUri, clientCredentials, grantType);
+            _partialCacheKey = string.Join(":", tokenEndpointUri, clientCredentials.CredentialThumbprint, grantType);
         }
 
         /// <summary>
@@ -50,10 +39,11 @@ namespace Scalepoint.OAuth.TokenClient
         /// </summary>
         /// <param name="tokenEndpointUri">OAuth2 Token endpoint URI</param>
         /// <param name="clientCredentials">OAuth2 client credentials</param>
-        /// <param name="cache">Token cache</param>
-        public ClientCredentialsGrantTokenClient(string tokenEndpointUri, IClientCredentials clientCredentials, IDistributedCache cache)
-            : base(tokenEndpointUri, clientCredentials, cache)
+        /// <param name="cache">Token cache. Will automatically dispose if implements IDisposable</param>
+        public ClientCredentialsGrantTokenClient(string tokenEndpointUri, IClientCredentials clientCredentials, ICache<string> cache)
+            : this(tokenEndpointUri, clientCredentials)
         {
+            _cache = cache;
         }
 
         /// <summary>
@@ -65,9 +55,40 @@ namespace Scalepoint.OAuth.TokenClient
         /// <exception cref="TokenEndpointException">Exception during token endpoint communication</exception>
         public Task<string> GetTokenAsync(string[] scopes, CancellationToken token = default(CancellationToken))
         {
-            return GetTokenInternalAsync(new List<KeyValuePair<string, string>>(), scopes, token);
+            var cacheKey = string.Join(":", _partialCacheKey, ScopeHelper.ToScopeString(scopes));
+            return _cache.GetOrCreateAsync(cacheKey,
+                ct => _customGrantTokenClient.GetTokenInternalAsync(new List<KeyValuePair<string, string>>(), scopes, ct),
+                token);
         }
 
-        protected override string GrantType { get; } = "client_credentials";
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~ClientCredentialsGrantTokenClient()
+        {
+            Dispose(false);
+        }
+
+        private bool _disposed;
+
+        private void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _customGrantTokenClient.Dispose();
+                if (_cache is IDisposable disposableCache)
+                {
+                    disposableCache.Dispose();
+                }
+
+                _disposed = true;
+            }
+        }
     }
 }

@@ -59,8 +59,6 @@ namespace Scalepoint.OAuth.TokenClient.Internals
             return new Tuple<string, TimeSpan>(accessToken, expiresIn);
         }
 
-        bool _disposed;
-
         public void Dispose()
         {
             Dispose(true);
@@ -74,15 +72,10 @@ namespace Scalepoint.OAuth.TokenClient.Internals
 
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposed)
-                return;
-
             if (disposing)
             {
                 _httpClient.Dispose();
             }
-
-            _disposed = true;
         }
     }
 }

@@ -1,39 +1,36 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
-#if !NET45
-using Microsoft.Extensions.Caching.Distributed;
-#endif
-using Scalepoint.OAuth.TokenClient.Cache;
 using Scalepoint.OAuth.TokenClient.Internals;
 using NameValuePair=System.Collections.Generic.KeyValuePair<string, string>;
 
 namespace Scalepoint.OAuth.TokenClient
 {
     /// <summary>
-    /// Abstract token endpoint client, extendable to handle custom token endpoint grants
+    /// Abstract token endpoint client able to handle custom token endpoint grants
     /// </summary>
-    public abstract class CustomGrantTokenClient : IDisposable
+    public sealed class CustomGrantTokenClient : IDisposable
     {
         private readonly TokenEndpointHttpClient _tokenEndpointHttpClient;
         private readonly IClientCredentials _clientCredentials;
-        private readonly string _partialCacheKey;
-        private readonly IDistributedCache _cache;
+
+        /// <summary>
+        /// Grant type (i.e. "client_credentials")
+        /// </summary>
+        public string GrantType { get; }
 
         /// <summary>
         /// Create new CustomGrantTokenClient
         /// </summary>
         /// <param name="tokenEndpointUri">OAuth2 token endpoint URI</param>
         /// <param name="clientCredentials">Client credentials</param>
-        /// <param name="cache">Token cache</param>
-        protected CustomGrantTokenClient(string tokenEndpointUri, IClientCredentials clientCredentials, IDistributedCache cache)
+        /// <param name="grantType">OAuth2 grant_type</param>
+        public CustomGrantTokenClient(string tokenEndpointUri, IClientCredentials clientCredentials, string grantType)
         {
             _tokenEndpointHttpClient = new TokenEndpointHttpClient(tokenEndpointUri);
             _clientCredentials = clientCredentials;
-            _partialCacheKey = string.Join(":", tokenEndpointUri, clientCredentials.CredentialThumbprint);
-            _cache = cache;
+            GrantType = grantType;
         }
 
         /// <summary>
@@ -41,57 +38,30 @@ namespace Scalepoint.OAuth.TokenClient
         /// </summary>
         /// <param name="parameters">Grant-specific parameters</param>
         /// <param name="scopes">OAuth2 scopes to request</param>
+        /// <param name="token">Cancellation token</param>
         /// <returns>Access token</returns>
-        protected Task<string> GetTokenInternalAsync(IList<NameValuePair> parameters, string[] scopes, CancellationToken token)
+        public async Task<Tuple<string, TimeSpan>> GetTokenInternalAsync(IList<NameValuePair> parameters, string[] scopes, CancellationToken token)
         {
-            var scopeString = scopes != null && scopes.Length >= 1
-                ? string.Join(" ", scopes)
-                : null;
+            var scopeString = ScopeHelper.ToScopeString(scopes);
 
-            var cacheKey = string.Join(":", _partialCacheKey, GrantType, scopeString, GetParametersHashCode(parameters).ToString(CultureInfo.InvariantCulture));
-
-            return _cache.GetOrCreateStringAsync(cacheKey, async (cacheEntryOptions, ct) =>
+            var form = new List<NameValuePair>
             {
-                var form = new List<NameValuePair>
-                {
-                    new NameValuePair("grant_type", GrantType)
-                };
+                new NameValuePair("grant_type", GrantType)
+            };
 
-                form.AddRange(_clientCredentials.PostParams);
+            form.AddRange(_clientCredentials.PostParams);
 
-                form.AddRange(parameters);
-
-                if (scopeString != null)
-                {
-                    form.Add(new NameValuePair("scope", scopeString));
-                }
-
-                var result = await _tokenEndpointHttpClient.GetToken(form, ct).ConfigureAwait(false);
-                cacheEntryOptions.AbsoluteExpirationRelativeToNow = result.Item2;
-                return result.Item1;
-            }, token);
-        }
-
-        private static int GetParametersHashCode(IList<NameValuePair> parameters)
-        {
-            unchecked
+            if (scopeString != null)
             {
-                int hash = 19;
-                foreach (var parameter in parameters)
-                {
-                    hash = hash * 31 + parameter.Key.GetHashCode();
-                    hash = hash * 31 + parameter.Value.GetHashCode();
-                }
-                return hash;
+                form.Add(new NameValuePair("scope", scopeString));
             }
+
+            form.AddRange(parameters);
+
+            var result = await _tokenEndpointHttpClient.GetToken(form, token).ConfigureAwait(false);
+
+            return result;
         }
-
-        /// <summary>
-        /// Grant type (i.e. "client_credentials")
-        /// </summary>
-        protected abstract string GrantType { get; }
-
-        bool _disposed;
 
         public void Dispose()
         {
@@ -104,7 +74,9 @@ namespace Scalepoint.OAuth.TokenClient
             Dispose(false);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private bool _disposed;
+
+        private void Dispose(bool disposing)
         {
             if (_disposed)
                 return;
@@ -112,9 +84,9 @@ namespace Scalepoint.OAuth.TokenClient
             if (disposing)
             {
                 _tokenEndpointHttpClient.Dispose();
-            }
 
-            _disposed = true;
+                _disposed = true;
+            }
         }
     }
 }

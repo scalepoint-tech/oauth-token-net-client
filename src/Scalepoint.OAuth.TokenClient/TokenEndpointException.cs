@@ -9,6 +9,7 @@ namespace Scalepoint.OAuth.TokenClient
     [Serializable]
     public class TokenEndpointException : Exception
     {
+        // ReSharper disable once UnusedMember.Global
         public TokenEndpointException()
         {
         }
@@ -21,10 +22,8 @@ namespace Scalepoint.OAuth.TokenClient
         {
         }
 
-#if !NETSTANDARD1_4
         protected TokenEndpointException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 }
