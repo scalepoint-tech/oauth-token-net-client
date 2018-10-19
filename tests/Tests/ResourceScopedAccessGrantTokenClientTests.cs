@@ -42,7 +42,7 @@ namespace Tests
         {
             using (var cts = new CancellationTokenSource(5000))
             {
-                await _tokenClient.GetTokenAsync(new ResourceScopedAccessGrantParameters("test_scope", "test_resource"), new CancellationToken(false));
+                await _tokenClient.GetTokenAsync(new ResourceScopedAccessGrantParameters("test_scope", "test_resource"), cts.Token);
             }
         }
 

@@ -42,6 +42,7 @@ namespace Tests
             }
 
             // ReSharper disable InconsistentNaming
+            // ReSharper disable once StringLiteralTypo
             const string expectedX5t = "0Oer5CYGAdzobK1wRYzuQ9fy7eU";
             const string expectedKid = "D0E7ABE4260601DCE86CAD70458CEE43D7F2EDE5";
 
@@ -62,7 +63,7 @@ namespace Tests
 
             if (jwt.Claims.Count(c => c.Type == JwtRegisteredClaimNames.Jti) != 1)
             {
-                throw new ArgumentException($"Missing 'jti' claim");
+                throw new ArgumentException("Missing 'jti' claim");
             }
         }
     }

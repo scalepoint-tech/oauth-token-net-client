@@ -40,6 +40,7 @@ namespace Scalepoint.OAuth.TokenClient
         /// <param name="tokenEndpointUri">OAuth2 Token endpoint URI</param>
         /// <param name="clientCredentials">OAuth2 client credentials</param>
         /// <param name="cache">Token cache. Will automatically dispose if implements IDisposable</param>
+        // ReSharper disable once UnusedMember.Global
         public ClientCredentialsGrantTokenClient(string tokenEndpointUri, IClientCredentials clientCredentials, ICache<string> cache)
             : this(tokenEndpointUri, clientCredentials)
         {
