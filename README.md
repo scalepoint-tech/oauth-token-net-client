@@ -48,3 +48,7 @@ var tokenClient = new ClientCredentialsGrantTokenClient(
 
 var accessToken = await tokenClient.GetTokenAsync(new [] { scope1, scope2 });
 ```
+
+Also check our [examples repository](https://github.com/Scalepoint/examples/) example:
+
+- <https://github.com/Scalepoint/examples/tree/master/dotnet/scalepoint-id-get-token>
