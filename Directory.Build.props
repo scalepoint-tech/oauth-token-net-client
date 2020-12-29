@@ -7,19 +7,20 @@
     <Company>Scalepoint Technologies Denmark A/S</Company>
     <Product>Scalepoint.OAuth.TokenClient</Product>
     <RepositoryUrl>https://github.com/Scalepoint/oauth-token-net-client</RepositoryUrl>
-    <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/Scalepoint/oauth-token-net-client</PackageProjectUrl>
     <PackageTags>OAuth2 ClientCredentials ClientAssertion JwtBearer PrivateKeyJwt</PackageTags>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
   <PropertyGroup>
     <TreatWarningsAsErrors Condition=" '$(Configuration)' == 'Release' ">true</TreatWarningsAsErrors>
-    <Features>IOperation</Features>
-    <NoWarn>$(NoWarn);CA1307;CA2234;CA1801;CA1054;CA1056</NoWarn>
+    <NoWarn>$(NoWarn);S2699</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.2" PrivateAssets="All" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.7.0.7192" PrivateAssets="All" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.16.0.25740" PrivateAssets="All" />
   </ItemGroup>
 </Project>
