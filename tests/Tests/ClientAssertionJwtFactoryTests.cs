@@ -15,7 +15,7 @@ namespace Tests
         {
             _tokenEndpointUri = "https://localhost/oauth2/token";
             _clientId = "test_client";
-            _certificate = TestCertificate.Load();
+            _certificate = TestCertificate.Get();
             _factory = new ClientAssertionJwtFactory(_tokenEndpointUri, _clientId, _certificate);
         }
 

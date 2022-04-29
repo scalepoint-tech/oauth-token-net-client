@@ -16,7 +16,7 @@ namespace Tests
                 new JwtBearerClientAssertionCredentials(
                     TokenEndpointUri,
                     "test_client",
-                    TestCertificate.Load()
+                    TestCertificate.Get()
                 ));
         }
 

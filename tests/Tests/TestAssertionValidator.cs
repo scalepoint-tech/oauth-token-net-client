@@ -41,10 +41,11 @@ namespace Tests
                 throw new ArgumentException($"Invalid subject: {jwt.Subject}");
             }
 
+            var cert = TestCertificate.Get();
             // ReSharper disable InconsistentNaming
             // ReSharper disable once StringLiteralTypo
-            const string expectedX5t = "0Oer5CYGAdzobK1wRYzuQ9fy7eU";
-            const string expectedKid = "D0E7ABE4260601DCE86CAD70458CEE43D7F2EDE5";
+            string expectedX5t = new X509SecurityKey(cert).X5t;
+            string expectedKid = cert.Thumbprint.ToUpperInvariant();
 
             var x5t = jwt.Header.X5t;
             var kid = jwt.Header.Kid;
@@ -58,7 +59,7 @@ namespace Tests
 
             if (!string.Equals(kid, expectedKid, StringComparison.OrdinalIgnoreCase))
             {
-                throw new ArgumentException($"Invalid 'kid' header claim: {kid}, expected {expectedX5t}");
+                throw new ArgumentException($"Invalid 'kid' header claim: {kid}, expected {expectedKid}");
             }
 
             if (jwt.Claims.Count(c => c.Type == JwtRegisteredClaimNames.Jti) != 1)

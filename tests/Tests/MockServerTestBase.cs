@@ -1,4 +1,5 @@
 using System;
+using Microsoft.AspNetCore.TestHost;
 
 namespace Tests
 {
@@ -9,8 +10,9 @@ namespace Tests
 
         public MockServerTestBase()
         {
-            _mockServer = MockServer.Start(out var tokenEndpointUri);
-            TokenEndpointUri = tokenEndpointUri;
+            string _tokenEndpointUri;
+            _mockServer = MockServer.Start(out _tokenEndpointUri);
+            TokenEndpointUri = _tokenEndpointUri;
         }
 
         protected virtual void Dispose(bool disposing)

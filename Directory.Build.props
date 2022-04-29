@@ -21,6 +21,6 @@
     <NoWarn>$(NoWarn);S2699</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.16.0.25740" PrivateAssets="All" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.38.0.46746" PrivateAssets="All" />
   </ItemGroup>
 </Project>
