@@ -39,7 +39,7 @@ namespace Scalepoint.OAuth.TokenClient
         {
             var parameters = new List<NameValuePair>()
             {
-                new NameValuePair("sso_resource", grantParameters.Resource)
+                new NameValuePair("target", grantParameters.Target)
             };
 
             if (grantParameters.TenantId != null)

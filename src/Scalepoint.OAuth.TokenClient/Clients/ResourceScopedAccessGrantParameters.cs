@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
 namespace Scalepoint.OAuth.TokenClient
 {
@@ -15,7 +16,17 @@ namespace Scalepoint.OAuth.TokenClient
         /// <summary>
         /// Specific resource identifier
         /// </summary>
-        public string Resource { get; }
+        [Obsolete("This property will be removed in the future. Please use Target property instead.")]
+        public string Resource
+        {
+            get => Target;
+            private set => Target = value;
+        }
+
+        /// <summary>
+        /// Specific target identifier
+        /// </summary>
+        public string Target { get; private set; }
 
         /// <summary>
         /// Resource tenant identifier
@@ -31,24 +42,24 @@ namespace Scalepoint.OAuth.TokenClient
         /// Creates new ResourceScopedAccessGrantParameters
         /// </summary>
         /// <param name="scope">OAuth2 scope</param>
-        /// <param name="resource">Specific resource identifier</param>
-        public ResourceScopedAccessGrantParameters(string scope, string resource)
+        /// <param name="target">Specific target identifier</param>
+        public ResourceScopedAccessGrantParameters(string scope, string target)
         {
             Scope = scope;
-            Resource = resource;
+            Target = target;
         }
 
         /// <summary>
         /// Creates new ResourceScopedAccessGrantParameters
         /// </summary>
         /// <param name="scope">OAuth2 scope</param>
-        /// <param name="resource">Specific resource identifier</param>
+        /// <param name="target">Specific target identifier</param>
         /// <param name="tenantId">Resource tenant identifier</param>
         /// <param name="amr">Original authentication method references</param>
-        public ResourceScopedAccessGrantParameters(string scope, string resource, string tenantId, IList<string> amr)
+        public ResourceScopedAccessGrantParameters(string scope, string target, string tenantId, IList<string> amr)
         {
             Scope = scope;
-            Resource = resource;
+            Target = target;
             TenantId = tenantId;
             Amr = amr;
         }
