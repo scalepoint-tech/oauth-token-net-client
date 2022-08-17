@@ -17,16 +17,12 @@ namespace Scalepoint.OAuth.TokenClient
         /// Specific resource identifier
         /// </summary>
         [Obsolete("This property will be removed in the future. Please use Target property instead.")]
-        public string Resource
-        {
-            get => Target;
-            private set => Target = value;
-        }
+        public string Resource => Target;
 
         /// <summary>
         /// Specific target identifier
         /// </summary>
-        public string Target { get; private set; }
+        public string Target { get; }
 
         /// <summary>
         /// Resource tenant identifier
