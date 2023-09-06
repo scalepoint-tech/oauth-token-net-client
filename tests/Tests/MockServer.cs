@@ -77,7 +77,7 @@ namespace Tests
 
             if (form["grant_type"] == "urn:scalepoint:params:oauth:grant-type:resource-scoped-access")
             {
-                if (form["resource"] != "test_resource") return false;
+                if (form["target"] != "test_resource") return false;
                 if (form["tenantId"] != (string) null && form["tenantId"] != "test_tenant") return false;
                 if (form["amr"] != (string) null && form["amr"] != "pwd otp mfa") return false;
             }
