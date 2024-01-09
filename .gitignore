@@ -235,3 +235,6 @@ _Pvt_Extensions
 # Rider
 .idea
 
+# Claude Code
+.claude/settings.local.json
+

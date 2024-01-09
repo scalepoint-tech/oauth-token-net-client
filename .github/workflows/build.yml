@@ -11,18 +11,18 @@ env:
   DOTNET_NOLOGO: "true"
 jobs:
   build:
-    runs-on: windows-2019 # 2019 has .NET 4.5 Targeting Pack preinstalled
+    runs-on: windows-2025 # has .NET 4.8 Targeting Pack preinstalled
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 10.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore --locked-mode
     - name: Build
       run: dotnet build -c Release --no-restore
     - name: Test
       run: dotnet test -c Release --no-build --verbosity normal
-    - name: Publish
+    - name: Pack
       run: dotnet pack -c Release
