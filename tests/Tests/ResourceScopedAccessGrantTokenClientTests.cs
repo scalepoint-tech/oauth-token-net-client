@@ -55,7 +55,7 @@ namespace Tests
         [Fact]
         public async Task should_get_token()
         {
-            var token = await _tokenClient.GetTokenAsync(new ResourceScopedAccessGrantParameters("test_scope", "test_resource"));
+            var token = await _tokenClient.GetTokenAsync(new ResourceScopedAccessGrantParameters("test_scope", "test_resource"), TestContext.Current.CancellationToken);
             Assert.NotNull(token);
         }
 
@@ -68,7 +68,7 @@ namespace Tests
                     "test_resource",
                     "test_tenant",
                     new List<string>() {"pwd", "otp", "mfa"}
-                ));
+                ), TestContext.Current.CancellationToken);
             Assert.NotNull(token);
         }
 
@@ -77,7 +77,7 @@ namespace Tests
         {
             await Assert.ThrowsAsync<TokenEndpointException>(async () =>
             {
-                await _tokenClient.GetTokenAsync(new ResourceScopedAccessGrantParameters("test_scope", "invalid_resource"));
+                await _tokenClient.GetTokenAsync(new ResourceScopedAccessGrantParameters("test_scope", "invalid_resource"), TestContext.Current.CancellationToken);
             });
         }
     }

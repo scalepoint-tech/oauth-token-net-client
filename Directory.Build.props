@@ -1,26 +1,27 @@
 <Project>
   <PropertyGroup>
-    <Version Condition=" '$(Version)' == '' ">0.0-snapshot</Version>
+    <Version>0.9.0-snapshot</Version>
     <Authors>Scalepoint</Authors>
     <Owners>scalepoint</Owners>
-    <Copyright>Scalepoint Technologies Denmark A/S</Copyright>
-    <Company>Scalepoint Technologies Denmark A/S</Company>
+    <Copyright>Scalepoint A/S</Copyright>
+    <Company>Scalepoint A/S</Company>
     <Product>Scalepoint.OAuth.TokenClient</Product>
-    <RepositoryUrl>https://github.com/Scalepoint/oauth-token-net-client</RepositoryUrl>
+    <RepositoryUrl>https://github.com/scalepoint-tech/oauth-token-net-client</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/Scalepoint/oauth-token-net-client</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/scalepoint-tech/oauth-token-net-client</PackageProjectUrl>
     <PackageTags>OAuth2 ClientCredentials ClientAssertion JwtBearer PrivateKeyJwt</PackageTags>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
   <PropertyGroup>
     <TreatWarningsAsErrors Condition=" '$(Configuration)' == 'Release' ">true</TreatWarningsAsErrors>
-    <NoWarn>$(NoWarn);S2699</NoWarn>
+    <NoWarn>$(NoWarn);S2699;S1133</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.38.0.46746" PrivateAssets="All" />
+    <PackageReference Include="SonarAnalyzer.CSharp" PrivateAssets="All" />
   </ItemGroup>
 </Project>

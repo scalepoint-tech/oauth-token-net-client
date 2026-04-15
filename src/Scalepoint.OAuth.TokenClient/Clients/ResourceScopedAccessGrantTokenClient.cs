@@ -35,7 +35,7 @@ namespace Scalepoint.OAuth.TokenClient
             return result.Item1;
         }
 
-        private IList<NameValuePair> GetPostParams(ResourceScopedAccessGrantParameters grantParameters)
+        private static IList<NameValuePair> GetPostParams(ResourceScopedAccessGrantParameters grantParameters)
         {
             var parameters = new List<NameValuePair>()
             {

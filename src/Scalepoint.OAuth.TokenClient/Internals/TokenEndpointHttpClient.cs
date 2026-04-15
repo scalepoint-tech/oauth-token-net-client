@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 
 namespace Scalepoint.OAuth.TokenClient.Internals
 {
@@ -40,23 +40,31 @@ namespace Scalepoint.OAuth.TokenClient.Internals
 
         private static Tuple<string, TimeSpan> ParseResponse(string content)
         {
-            var body = JObject.Parse(content);
-            var accessToken = body.Property("access_token").Value.Value<string>();
-            var expiresInJson = body.Property("expires_in");
-
-            if (string.IsNullOrWhiteSpace(accessToken))
+            using (var body = JsonDocument.Parse(content))
             {
-                throw new TokenEndpointException("Token endpoint response does not contain valid \"access_token\"");
-            }
+                var root = body.RootElement;
 
-            var expiresInSeconds = 0;
-            if (expiresInJson != null)
-            {
-                expiresInSeconds = expiresInJson.Value.Value<int>();
-            }
+                if (!root.TryGetProperty("access_token", out var accessTokenElement))
+                {
+                    throw new TokenEndpointException("Token endpoint response does not contain valid \"access_token\"");
+                }
 
-            var expiresIn = TimeSpan.FromSeconds(Convert.ToInt32(expiresInSeconds));
-            return new Tuple<string, TimeSpan>(accessToken, expiresIn);
+                var accessToken = accessTokenElement.GetString();
+
+                if (string.IsNullOrWhiteSpace(accessToken))
+                {
+                    throw new TokenEndpointException("Token endpoint response does not contain valid \"access_token\"");
+                }
+
+                var expiresInSeconds = 0;
+                if (root.TryGetProperty("expires_in", out var expiresInElement))
+                {
+                    expiresInSeconds = expiresInElement.GetInt32();
+                }
+
+                var expiresIn = TimeSpan.FromSeconds(Convert.ToInt32(expiresInSeconds));
+                return new Tuple<string, TimeSpan>(accessToken, expiresIn);
+            }
         }
 
         public void Dispose()

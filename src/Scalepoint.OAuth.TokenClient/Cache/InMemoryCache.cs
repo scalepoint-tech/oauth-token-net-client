@@ -6,7 +6,7 @@ using Scalepoint.OAuth.TokenClient.Internals;
 
 namespace Scalepoint.OAuth.TokenClient.Cache
 {
-    public sealed class InMemoryCache<T> : ICache<T>, IDisposable
+    public sealed class InMemoryCache<T> : ICache<T>, IDisposable where T : class
     {
         private readonly MemoryCache _memoryCache = new MemoryCache("InMemoryTokenCache");
 

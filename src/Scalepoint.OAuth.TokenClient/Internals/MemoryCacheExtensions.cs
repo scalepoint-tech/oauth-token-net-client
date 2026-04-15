@@ -7,7 +7,7 @@ namespace Scalepoint.OAuth.TokenClient.Internals
 {
     internal static class MemoryCacheExtensions
     {
-        public static async Task<T> GetOrCreateAsync<T>(this MemoryCache cache, string key, Func<CancellationToken, Task<Tuple<T, TimeSpan>>> factory, CancellationToken token = default(CancellationToken))
+        public static async Task<T> GetOrCreateAsync<T>(this MemoryCache cache, string key, Func<CancellationToken, Task<Tuple<T, TimeSpan>>> factory, CancellationToken token = default(CancellationToken)) where T : class
         {
             var value = (T)cache.Get(key);
 
