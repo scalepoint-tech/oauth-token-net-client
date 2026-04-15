@@ -77,13 +77,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set release version in Directory.Build.props
-        if: github.event_name == 'release'
-        run: |
-          VERSION=${{ steps.get-version.outputs.version }}
-          RELEASE_VERSION="${VERSION%-snapshot}"
-          sed -i "s|<Version>$VERSION</Version>|<Version>$RELEASE_VERSION</Version>|" Directory.Build.props
-
       - name: Update release with NuGet links
         if: github.event_name == 'release'
         run: |
@@ -116,7 +109,9 @@ jobs:
       - name: Publish to NuGet.org
         if: github.event_name == 'release'
         run: |
-          dotnet pack -c Release -o ./artifacts
+          RELEASE_VERSION="${{ steps.get-version.outputs.version }}"
+          RELEASE_VERSION="${RELEASE_VERSION%-snapshot}"
+          dotnet pack -c Release -o ./artifacts -p:Version=$RELEASE_VERSION
           dotnet nuget push "./artifacts/*.nupkg" \
             --source "https://api.nuget.org/v3/index.json" \
             --api-key ${{ secrets.NUGET_API_KEY }} \
