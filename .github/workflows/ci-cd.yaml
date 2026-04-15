@@ -1,0 +1,129 @@
+name: Build and Publish
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Read version from Directory.Build.props
+        id: get-version
+        run: |
+          VERSION=$(grep -oP '(?<=<Version>)[^<]+' Directory.Build.props)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Validate Directory.Build.props version has -snapshot suffix
+        run: |
+          VERSION=${{ steps.get-version.outputs.version }}
+          echo "Version: $VERSION"
+          if [[ "$VERSION" != *"-snapshot" ]]; then
+            echo "::error::Directory.Build.props version must end with -snapshot, but is '$VERSION'"
+            exit 1
+          fi
+
+      - name: Validate release tag matches version
+        if: github.event_name == 'release'
+        run: |
+          TAG_VERSION=${GITHUB_REF#refs/tags/v}
+          VERSION=${{ steps.get-version.outputs.version }}
+          EXPECTED_TAG="${VERSION%-snapshot}"
+          echo "GitHub tag: $TAG_VERSION"
+          echo "Expected from Directory.Build.props: $EXPECTED_TAG"
+          if [ "$TAG_VERSION" != "$EXPECTED_TAG" ]; then
+            echo "::error::Tag v$TAG_VERSION does not match Directory.Build.props version $VERSION without -snapshot suffix"
+            exit 1
+          fi
+
+      - name: Build and test
+        run: dotnet test -c Release --logger trx --results-directory TestResults
+
+      - name: Publish Test Results
+        uses: dorny/test-reporter@dc3a92680fcc15842eef52e8c4606ea7ce6bd3f3 # v2.1.1
+        if: success() || failure()
+        with:
+          name: Test Results
+          path: TestResults/*.trx
+          reporter: dotnet-trx
+          fail-on-error: false
+          only-summary: true
+
+      - name: Publish to GitHub Packages
+        if: github.event_name == 'push'
+        run: |
+          dotnet pack -c Release --no-build -o ./artifacts
+          dotnet nuget push "./artifacts/*.nupkg" \
+            --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
+            --api-key ${{ secrets.GITHUB_TOKEN }} \
+            --skip-duplicate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set release version in Directory.Build.props
+        if: github.event_name == 'release'
+        run: |
+          VERSION=${{ steps.get-version.outputs.version }}
+          RELEASE_VERSION="${VERSION%-snapshot}"
+          sed -i "s|<Version>$VERSION</Version>|<Version>$RELEASE_VERSION</Version>|" Directory.Build.props
+
+      - name: Update release with NuGet links
+        if: github.event_name == 'release'
+        run: |
+          RELEASE_VERSION="${{ steps.get-version.outputs.version }}"
+          RELEASE_VERSION="${RELEASE_VERSION%-snapshot}"
+
+          EXISTING_BODY=$(gh release view ${{ github.event.release.tag_name }} --json body -q .body)
+
+          if [ -n "$EXISTING_BODY" ] && [ "$EXISTING_BODY" != "null" ]; then
+            echo "$EXISTING_BODY" > release_body.md
+            echo "" >> release_body.md
+            echo "---" >> release_body.md
+            echo "" >> release_body.md
+          fi
+
+          cat << EOF >> release_body.md
+          ## 📦 NuGet
+
+          This release is available at https://www.nuget.org/packages/Scalepoint.OAuth.TokenClient/${RELEASE_VERSION}
+
+          \`\`\`xml
+          <PackageReference Include="Scalepoint.OAuth.TokenClient" Version="${RELEASE_VERSION}" />
+          \`\`\`
+          EOF
+
+          gh release edit ${{ github.event.release.tag_name }} --notes-file release_body.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to NuGet.org
+        if: github.event_name == 'release'
+        run: |
+          dotnet pack -c Release -o ./artifacts
+          dotnet nuget push "./artifacts/*.nupkg" \
+            --source "https://api.nuget.org/v3/index.json" \
+            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --skip-duplicate
+          dotnet nuget push "./artifacts/*.snupkg" \
+            --source "https://api.nuget.org/v3/index.json" \
+            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --skip-duplicate
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
