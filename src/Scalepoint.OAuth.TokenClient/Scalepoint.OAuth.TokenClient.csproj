@@ -8,10 +8,6 @@
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'net48' ">
-        <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>..\..\SigningKey.snk</AssemblyOriginatorKeyFile>
-    </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="System.Text.Json" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
